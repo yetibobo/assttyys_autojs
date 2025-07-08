@@ -37,6 +37,9 @@ webviewEvents();
 // 非UI 线程的操作都可以在这个作业线程下进行，避免了开启多个线程。
 effect$.subscribe(() => {
 	// 监听放在effect里，只有当权限到位后，监听才生效
+	//这个floaty位于global.d.ts中用declare声明了类型是一些检查方法的
+	//declare的核心作用是在 TS 中桥接 JS 与类型系统，在 SQL 中桥接数据与逻辑，在语言中桥接意图与正式效力
+	//还可以声明其他脚本（如 JavaScript 库）定义的全局标识符，避免 TS 编译器报错
 	if (floaty.checkPermission() && getWebLoaded()) {
 		myFloaty.init();
 	}
