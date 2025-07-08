@@ -24,10 +24,10 @@ assttyys_autojs
 ├─hotrun                                       热更新壳程序
 │  ├─build
 │  └─res
-├─node_modules                                 npm依赖包路径（文件太多约4W个文件打了个压缩包约60M）
+├─node_modules                                 npm依赖包路径（文件太多需npm i命令自行生成）
 ├─res                                          aj打包时自动产生的资源目录
 ├─src                                          源码目录
-│  │  index.ts                                 入口文件
+│  │  index.ts                                 (主程序)入口文件
 │  ├─common                                    公共模块
 │  │  │  commonConfig.ts                       公共默认配置，每个方案右上角的配置来源
 │  │  │  fmmxQuestionList.ts                   逢魔密信题库
