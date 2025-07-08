@@ -13,7 +13,7 @@ ASISTTANT YYS NEXT GENERATION<br/>
 前端已从本项目分离，见 [zzliux/assttyys_ui](https://github.com/zzliux/assttyys_ui)
 ```
 assttyys_autojs
-├─assets                                       资源目录，不经过webpack打包，运行时可加载该目录下的文件
+├─assets                                       资源目录，不经过webpack打包，运行时可加载该目录下的文件，打包完成后要复制该目录与dist同级，不然会报错。
 │  ├─img                                       
 │  └─lib
 ├─build                                        aj打包时自动产生的构建目录
@@ -24,7 +24,7 @@ assttyys_autojs
 ├─hotrun                                       热更新壳程序
 │  ├─build
 │  └─res
-├─node_modules                                 npm依赖包路径
+├─node_modules                                 npm依赖包路径（文件太多打了个压缩包）
 ├─res                                          aj打包时自动产生的资源目录
 ├─src                                          源码目录
 │  │  index.ts                                 入口文件
@@ -47,7 +47,7 @@ assttyys_autojs
 │  ├─system                                    aj端目录
 │  │  │  drawFloaty.ts                         悬浮绘制模块
 │  │  │  helperBridge.ts                       操作模块，集成scriptlib以及点击等操作
-│  │  │  index.ts                              aj端入口
+│  │  │  index.ts                              aj初始化文件，入口src/index.ts运行后会import{webview}from "@/src/system"自动运行该文件
 │  │  │  inputhideutil.ts                      适配软键盘弹起布局的模块
 │  │  │  myFloaty.ts                           悬浮按钮模块
 │  │  │  ocr.ts                                ocr模块
