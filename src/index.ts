@@ -34,6 +34,7 @@ webviewEvents();
 // effect$是作业线程，当core的权限全部到位后，effect$才开始运作
 // effect$.subscribe() 是响应式编程中常见的订阅模式实现
 // 主要用于监听数据流的变化并执行回调逻辑。
+// 非UI 线程的操作都可以在这个作业线程下进行，避免了开启多个线程。
 effect$.subscribe(() => {
 	// 监听放在effect里，只有当权限到位后，监听才生效
 	if (floaty.checkPermission() && getWebLoaded()) {
