@@ -24,8 +24,16 @@ import { doInitHookConsoleLog, getWebLoaded } from './common/toolAuto';
 // 运行webviewEvents文件夹下的index.ts，<注意>这里运行时，因进程中有import{webview}from"@/system"代码
 // 会自动运行system/index.ts的顶层代码，其中的export const webview= 会自动运行得到结果，从而创建html
 webviewEvents();
+// 依次运行了
+// schemeList();
+// funcList();
+// settings();
+// about();
+// schedule();
 
 // effect$是作业线程，当core的权限全部到位后，effect$才开始运作
+// effect$.subscribe() 是响应式编程中常见的订阅模式实现
+// 主要用于监听数据流的变化并执行回调逻辑。
 effect$.subscribe(() => {
 	// 监听放在effect里，只有当权限到位后，监听才生效
 	if (floaty.checkPermission() && getWebLoaded()) {
