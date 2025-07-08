@@ -40,6 +40,7 @@ effect$.subscribe(() => {
 	//这个floaty位于global.d.ts中用declare声明了类型是一些检查方法的
 	//declare的核心作用是在 TS 中桥接 JS 与类型系统，在 SQL 中桥接数据与逻辑，在语言中桥接意图与正式效力
 	//还可以声明其他脚本（如 JavaScript 库）定义的全局标识符，避免 TS 编译器报错
+	//同时根据AI提示：在AutoJS中，像floaty、console、toast等都是全局可用的内置模块，无需显式导入或实例化。
 	if (floaty.checkPermission() && getWebLoaded()) {
 		myFloaty.init();
 	}
