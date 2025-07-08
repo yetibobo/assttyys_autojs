@@ -21,6 +21,6 @@
             "@/*": ["src/*"]
         }
     },
-    "include": ["src/**/*", "./node_modules/@auto.pro/core/src/global.d.ts"], // 要打包的文件
-    "exclude": ["*.test.ts"]
+    "include": ["src/**/*", "./node_modules/@auto.pro/core/src/global.d.ts"], // 注意编译范围内的global.d.ts在 global.d.ts 文件中使用 declare 定义全局类型，TS 会自动识别这些声明无需import
+    "exclude": ["*.test.ts"]  // global.d.ts是TS特有文件，这类文件‌不会‌被编译为 .js 文件，仅在开发阶段提供静态类型检查支持
 }
