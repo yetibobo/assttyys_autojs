@@ -402,3 +402,61 @@ const updateGroupSchemeNamesBySchemeUpdate = (option: {
 	}
 	store.put('groupSchemeNames', groupSchemeNames);
 }
+
+
+// 导入依赖模块
+// 文件开头导入了必要的依赖： schemeList.ts:1-4
+
+// funcList: 功能列表索引，包含所有可用的自动化功能
+// commonConfigArr: 通用配置数组
+// IScheme: 方案接口类型定义
+// merge: 对象合并工具函数
+// 方案列表定义
+// 核心的 SchemeList 数组包含了所有预定义的自动化方案： schemeList.ts:6-12
+
+// 每个方案对象包含以下属性：
+
+// id: 方案唯一标识符
+// schemeName: 方案显示名称
+// star: 是否为星标方案（常用方案）
+// list: 功能ID数组，定义执行顺序
+// config: 可选的功能特定配置
+// commonConfig: 可选的通用配置参数
+// groupNames: 可选的分组名称数组
+// 典型方案示例
+// 以"通用准备退出"方案为例： schemeList.ts:7-12
+
+// 执行功能ID为 [0, 1, 2, 3] 的功能序列
+// 标记为星标方案
+// 复杂方案如"个人突破"包含详细配置： schemeList.ts:32-45
+
+// 包含功能配置，如功能8的执行次数和后续操作
+// 指定了突破类型参数
+// 通用配置处理
+// 代码构建通用配置对象： schemeList.ts:945-951
+
+// 遍历 commonConfigArr 数组，提取每个配置项的默认值，构建全局通用配置对象。
+
+// 功能配置映射
+// 构建所有功能的默认配置映射： schemeList.ts:952-963
+
+// 为每个功能ID创建配置对象，包含该功能的所有配置项默认值。
+
+// 方案数据合并处理
+// 最后的处理逻辑对每个方案进行数据合并： schemeList.ts:968-989
+
+// 这段代码：
+
+// 记录内置方案名称到 innerSchemeListName 映射
+// 为每个方案的功能列表构建默认配置
+// 使用 merge 函数合并默认配置和方案特定配置
+// 确保每个方案都有完整的配置结构
+// 导出接口
+// 文件导出三个主要内容： schemeList.ts:991-997
+
+// schemeNameMap: 内置方案名称映射
+// SchemeList: 完整的方案列表（默认导出）
+// GroupSchemeName: 分组方案名称类型定义
+// Notes
+// 这个文件在系统架构中起到配置中心的作用，被 src/system/webviewEvents/schemeList.ts 等模块引用用于方案管理。 
+// schemeList.ts:9 方案列表包含了从基础的组队、个人副本到复杂的定时任务等各种自动化场景，每个方案通过功能ID序列定义执行流程，通过配置对象定制具体行为。
