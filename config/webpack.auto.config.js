@@ -147,6 +147,8 @@ module.exports = (env, argv) => {
             // }),
             compilePlugin,
             new ProgressPlugin(),
+
+            // CopyWebpackPlugin插件实现了一个文件复制功能
             new CopyWebpackPlugin({
                 patterns: [
                     { from: path.resolve(__dirname, '../node_modules/assttyys_ui/dist/index.html'), to: '.' },
