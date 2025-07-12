@@ -107,8 +107,10 @@ events.on('exit', () => {
 //     })
 // ).subscribe()
 
-// webview.on 事件处理主要分布在以下几个模块中：
 
+// webview.on本身就是事件注册，然后前端vue.js通过webview.call对应这个注册事件来调用动作
+
+// webview.on 事件处理主要分布在以下几个模块中：
 // 1方案管理相关事件 (schemeList.ts) schemeList.ts:65-71
 // getSchemeList: 获取已保存的方案列表
 // getGroupSchemeNames: 获取分组方案名称
@@ -120,8 +122,7 @@ events.on('exit', () => {
 // saveSchemeList: 保存整个方案列表
 // starScheme: 收藏/取消收藏方案 schemeList.ts:214-221
 
-// 2界面相关事件：
-// webloaded: 界面加载完成后的初始化
+// 2界面相关事件： webloaded: 界面加载完成后的初始化
 // getStatusBarHeight: 获取状态栏高度
 // versionInfo: 获取版本信息
 // getAppInfo: 获取应用信息
@@ -129,7 +130,7 @@ events.on('exit', () => {
 // toast: 显示提示信息
 // exit: 退出应用
 
-//3 功能列表相关事件 (funcList.ts) funcList.ts:14-28
+// 3功能列表相关事件： (funcList.ts) funcList.ts:14-28
 // getScheme: 根据方案名获取方案
 // getDefaultScheme: 获取默认方案
 // setCurrentScheme: 设置当前方案
