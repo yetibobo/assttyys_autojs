@@ -86,3 +86,45 @@ export default function webviewEvents() {
 // 这些 webview 事件构成了完整的前后端通信体系，涵盖了方案管理、功能执行、系统设置、
 // 定时任务和应用信息等核心功能模块。 每个事件都使用 subscribe 模式处理，通过 done 
 // 回调返回结果给前端。
+
+
+// 根据代码分析，这个项目除了 webview 桥接事件外，还使用了多种其他事件系统：
+
+// 1. 脚本引擎广播事件 (events.broadcast)
+// 项目使用内部事件广播系统来协调脚本执行： script.ts:927-940
+// 这些广播事件包括：
+// SCRIPT_STOP: 停止脚本执行
+// SCRIPT_RUN: 启动脚本执行
+// SCRIPT_RERUN: 重新运行脚本
+
+// 2. UI 界面事件 (ui.emitter)
+// 项目监听 AutoJS 的 UI 界面事件： schemeList.ts:207-212 schemeList.ts:224-227
+// 主要包括：
+// resume: 界面恢复事件
+// back_pressed: 返回键按下事件
+
+// 3. 系统退出事件 (events.on)
+// 项目监听系统级别的退出事件： index.ts:93-95
+
+// 4. 悬浮按钮事件系统
+// 悬浮按钮使用自定义的事件系统： FloatButton.js:46-53
+// 包括多种悬浮按钮相关的事件：
+// show/hide: 显示/隐藏事件
+// close: 关闭事件
+// item_click: 点击事件
+// direction_changed: 停靠方向改变事件
+// menu_state_changed: 菜单状态改变事件
+// orientation_changed: 屏幕方向改变事件
+
+// 5. 定时任务事件
+// 定时任务系统有自己的事件处理机制： schedule.ts:99-103
+
+// 事件系统架构
+// 这些不同的事件系统在项目中形成了多层次的事件架构：
+
+// webview 事件：前后端通信
+// 广播事件：脚本引擎内部协调
+// UI 事件：界面交互处理
+// 系统事件：应用生命周期管理
+// 悬浮控件事件：悬浮按钮交互
+// 定时任务事件：调度系统管理
