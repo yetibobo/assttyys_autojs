@@ -28,7 +28,7 @@ assttyys_autojs
 ├─res                                          aj打包时自动产生的资源目录
 ├─src                                          源码目录
 │  │  index.ts                                 (主程序)入口文件
-│  ├─common                                    公共模块
+│  ├─common                                    公共模块（配置）
 │  │  │  commonConfig.ts                       公共默认配置，每个方案右上角的配置来源
 │  │  │  fmmxQuestionList.ts                   逢魔密信题库
 │  │  │  funcList.ts                           功能入口，用以动态加载funcList下所有模块
@@ -44,10 +44,10 @@ assttyys_autojs
 │  │          003.悬赏协作.ts
 │  │          004_接受邀请.ts
 │  │          ...
-│  ├─system                                    aj端目录
+│  ├─system                                    动作目录，使用了作者[molysama]autojs模块
 │  │  │  drawFloaty.ts                         悬浮绘制模块
-│  │  │  helperBridge.ts                       操作模块，集成scriptlib以及点击等操作
-│  │  │  index.ts                              aj初始化文件，入口src/index.ts运行后会import{webview}from "@/src/system"自动运行该文件
+│  │  │  helperBridge.ts                       操作模块，集成作者[yiszza]scriptlib以及点击等操作
+│  │  │  index.ts                              初始化文件，入口src/index.ts运行后会import{webview}from "@/src/system"自动运行该文件
 │  │  │  inputhideutil.ts                      适配软键盘弹起布局的模块
 │  │  │  myFloaty.ts                           悬浮按钮模块
 │  │  │  ocr.ts                                ocr模块
