@@ -12,11 +12,31 @@ import helperBridge from '@/system/helperBridge';
 import { IScheme } from '@/interface/IScheme';
 import { deepClone } from '@/common/tool';
 
+
+//运行schemelist()默认运行function webviewSchemeList
 export default function webviewSchemeList() {
-	// 1. 初始化schemeList
+	// 1. 初始化schemeList，其中IScheme[]类型定义位于src/interface/IScheme.ts中，表明schemeList是含多个IScheme对象的数组
+	// store.get从名为store的存储系统中get键key为'schemeList'的数据，该数据预期是一个符合IScheme接口结构的对象数组
+	// 第一次运行时store内应该是个空存储桶，所以要初始化.
+	// 项目使用两个主要的存储桶：
+        // asttyys_ng - 主要存储桶，用于存储脚本运行数据
+        // assttyys_ng_common - 通用存储桶，用于存储公共配置和设置
+	// 存储桶
+	// SharedPreferences 是 Android 开发中用于存储‌轻量级键值对数据‌的核心组件，其核心概念和用法如下：
+	// ‌用途‌：保存简单数据（如用户设置、应用配置、登录状态等），不适合存储大量或复杂数据（如数据库、文件流）。
+	// ‌存储位置‌：/data/data/<包名>/shared_prefs/ 目录下的 .xml 文件。
+	// 特性	说明
+	// ‌键值对存储‌	数据以 key-value 形式保存（键为String，值支持基本类型/String）。
+	// ‌进程安全‌	多线程访问时自动加锁，但‌不支持多进程共享‌（需改用 ContentProvider）。
+	// ‌同步/异步提交‌	commit()（同步，阻塞线程）和 apply()（异步，无返回值）。
+	// ‌数据类型限制‌	仅支持：boolean、int、float、long、String、Set<String>。
+	// selfStorages.create('asttyys_ng')时：数据存储位置位置通常在：
+	// /data/data/{应用包名}/shared_prefs/autojs.localstorage.asttyys_ng.xml  
 	let schemeList: IScheme[] = store.get('schemeList');
 	if (!schemeList) {
 		console.log('初始化schemeList', defaultSchemeList);
+		//对象的深拷贝（Deep Clone）‌，它会递归地复制一个对象的所有层级属性，生成一个完全独立的新对象
+		// defaultSchemeList位于@/common/schemeList
 		schemeList = deepClone(defaultSchemeList);
 		store.put('schemeList', defaultSchemeList);
 	} else {
