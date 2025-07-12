@@ -5,7 +5,9 @@ import about from '@/system/webviewEvents/about';
 import schedule from '@/system/webviewEvents/schedule';
 
 export default function webviewEvents() {
+	// 读取/src/common/schemeList.ts内容并分组
 	schemeList();
+	
 	funcList();
 	settings();
 	about();
