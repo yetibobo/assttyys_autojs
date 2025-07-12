@@ -66,36 +66,64 @@ export default function webviewSchemeList() {
 	}
 
 	// 2. 初始化groupSchemeNames
-	const groupSchemeNames = store.get('groupSchemeNames');
+	// 从store中获取名为'groupSchemeNames'的数据例如groupSchemeNames:'个人探索'
+	const groupSchemeNames = store.get('groupSchemeNames'); 
+	// 判断如果获取到的groupSchemeNames不存在或为空
 	if (!groupSchemeNames) {
+		// 创建一个空对象toSaveMap，用于临时存储分组信息
 		const toSaveMap: Record<string, GroupSchemeName> = {}
+		// 遍历src/common/schemeList.ts  schemeList数组中的每个scheme
 		schemeList.forEach(scheme => {
+			// 检查当前scheme的groupNames是否存在或为空数组，正常情况下都没有groupNames的
 			if (!scheme.groupNames || !(scheme.groupNames?.length)) {
+				// 如果groupNames不存在，则设置为默认值['未分组']，一开始相当于所有未分组方案都添加了未分组这个值
 				scheme.groupNames = ['未分组'];
 			}
+			// 遍历当前scheme的所有groupNames
 			scheme.groupNames.forEach(groupName => {
+				// 检查toSaveMap中是否已存在该groupName，一开始肯定没有的
 				if (!toSaveMap[groupName]) {
+					// 如果不存在，则初始化该groupName对应的数据结构
 					toSaveMap[groupName] = {
 						groupName, hidden: false, schemeNames: []
 					};
 				}
+				// 检查当前schemeName是否已存在于该groupName的schemeNames中
 				if (!toSaveMap[groupName].schemeNames.includes(scheme.schemeName)) {
+					// 如果不存在，则将当前schemeName添加到该groupName的schemeNames中
 					toSaveMap[groupName].schemeNames.push(scheme.schemeName);
 				}
 			});
 		});
+		// 将toSaveMap转换为数组形式
 		const toSave = Object.keys(toSaveMap).map(key => toSaveMap[key]);
+		// 打印初始化日志
 		console.log('初始化groupSchemeNames', toSave);
+		// 将初始化后的数据保存回store，最后方案按组分类
 		store.put('groupSchemeNames', toSave);
 	}
+	// 以上这段代码主要实现了：
+	// 从store获取分组方案数据
+	// 如果数据不存在，则根据schemeList初始化
+	// 确保每个scheme都有至少一个分组
+	// 构建分组到方案名称的映射关系
+	// 最终将初始化结果保存回store
+
+	
 
 	// 返回已保存的方案列表，如果未保存过，返回common中的schemeList
+
+	// webview.on('getSchemeList') 监听名为 getSchemeList 的事件
+	// .subscribe() 方法注册回调函数，当事件触发时执行该函数
+	// 参数 [_param, done] 解构出事件参数和完成回调函数 done
+	// 这里[_param, done]参数相当于无参数-默认参数
 	webview.on('getSchemeList').subscribe(([_param, done]) => {
 		// const savedSchemeList = store.get('schemeList', defaultSchemeList);
 		// savedSchemeList.forEach(item => {
 		// 	item.inner = schemeNameMap[item.schemeName] || false;
 		// });
 		// done(savedSchemeList);
+		// 通过 done(store.get('schemeList')) 直接返回存储的 schemeList 数据
 		done(store.get('schemeList'));
 	});
 
