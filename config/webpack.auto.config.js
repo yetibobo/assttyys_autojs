@@ -1,3 +1,8 @@
+// 这里解释一下为什么用require调用模块，Webpack配置文件运行在Node.js环境中，
+// 而Node.js默认采用CommonJS模块规范（require/exports），
+// 而非ES Module规范（import/export）。虽然新版Node.js已支持ES Module，
+// 但需显式声明（如package.json中设置"type": "module"）或使用.mjs扩展名
+
 const path = require("path")  // Node.js路径处理模块
 const { CleanWebpackPlugin } = require("clean-webpack-plugin")  // 清理构建目录的插件
 // const JavascriptObfuscator = require("webpack-obfuscator")
