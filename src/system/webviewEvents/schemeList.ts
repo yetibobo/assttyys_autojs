@@ -38,9 +38,17 @@ export default function webviewSchemeList() {
 		//对象的深拷贝（Deep Clone）‌，它会递归地复制一个对象的所有层级属性，生成一个完全独立的新对象
 		// defaultSchemeList位于@/common/schemeList
 		schemeList = deepClone(defaultSchemeList);
+		// put表示把value保存到key，value必须是可JSON化的值
 		store.put('schemeList', defaultSchemeList);
 	} else {
 		// 升级版本数据修复
+		// 遍历schemeList数组中的每个scheme对象
+		// 将旧版字段groupName的值迁移到新版数组字段groupNames中（若groupName存在非空值）
+		// 删除无效的空字符串groupName字段（当groupName === ''时）
+		// ‌数据持久化		
+		// 通过flag标记判断是否发生数据修改
+		// 若发生修改则调用store.put更新存储数据
+		
 		let flag = false;
 		for (const scheme of schemeList as (IScheme & { groupName: string })[]) {
 			if (scheme.groupName) {
