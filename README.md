@@ -1,4 +1,4 @@
-# ASSTTYYS NG
+# ASSTTYYS NG 
 ASISTTANT YYS NEXT GENERATION<br/>
 仅作学习用途，请勿用于其他非法途径！<br/>
 欢迎在issue中提出bug与建议，也欢迎有能力的同学加入开发与维护的队列中来<br/>
