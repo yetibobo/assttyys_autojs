@@ -60,7 +60,28 @@ assttyys_autojs
 │  │          index.ts
 │  │          ...
 ├─test                                          测试目录，里面有乱七八糟的测试用的文件
-|  ...                                          待补充
+|
+|
+├─.autojs.build.ignore
+├─.autojs.source.ignore
+├─.autojs.sync.ignore
+├─.eslintrc.js                                TypeScript 解析，强制执行编码标准，如单引号、制表符缩进，并包括 TypeScript 开发的特定规则。
+├─.gitignore
+├─LICENSE
+├─README.md                                   项目说明文档文件
+├─assttyys_ng.zip
+├─babel.config.js                             webpack打包时编译 babel-loader 时使用
+├─jsconfig.json                               多余文件、可能是用vue编译时产生的
+├─pack.js                                     用于创建压缩包的 Node.js 脚本。它使用该库创建一个 ZIP 文件
+├─pack_dev_release.js                         开发版本打包脚本，它通过将静态文件（assets、dist project.json）复制到目标目录来创建开发版本，并生成一个列出所有包含文件的索引文件
+├─package-lock.json
+├─package.json                                webpack打包时主配置文件，定义了各种 webpack 构建命令。
+├─project.json                                AutoJS Pro 项目配置文件，用于定义在手机端的应用程序结构、权限、构建设置和打包成APK过程中要忽略的文件
+├─run.js                                      用于从远程存储库下载最新版本的应用程序，将其提取到设备存储中，自动更新应用程序。
+├─tsconfig.json                               webpack打包时编译 ts-loader 时使用
+└─yarn.lock
+
+ ...                                          待补充
 ```
 
 # 特别鸣谢
