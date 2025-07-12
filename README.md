@@ -95,7 +95,10 @@ assttyys_autojs
 
 # LICENSE
 MIT
-#特别说明本项目以及UI界面均由zzliux作者创建，本页面及UI均Fork他的作品并停留在2025年7月12日只做注释不作更新，仅留欣赏使用。
+
+#特别说明
+-
+本项目以及UI界面均由zzliux作者创建，本页面及UI均Fork他的作品并停留在2025年7月12日只做注释不作更新，仅留欣赏使用。
 - [gitee.zzliux](https://gitee.com/zzliux)
   -[zzliux.assttyys.autojs](https://github.com/zzliux/assttyys_autojs)
   -[zzliux.assttyys.ui](https://github.com/zzliux/assttyys_ui)
