@@ -260,6 +260,9 @@ export default function webviewSchemeList() {
 	});
 
 	// 注册返回界面的事件
+	// fromEvent 是 RxJS 响应式编程的核心操作符，专为处理异步事件流设计，支持链式操作和复杂的数据流转换。
+	// 举例：fromEvent(document.getElementById('btn'), 'click').subscribe(() => console.log('Clicked!'));
+	// webview.on 通常是 Webview 容器的原生事件监听接口，功能相对单一，主要用于基础事件监听。
 	fromEvent(ui.emitter, 'resume').subscribe((_e) => {
 		// 登录验证
 		webview.runHtmlJS('window.resumeValidUser && window.resumeValidUser()');
