@@ -8,6 +8,7 @@
  * @LastEditTime: 2021-04-19 16:44:52
  */
 /*eslint-disable */
+//这里的global.是全局可用的函数，理论上其他文件无需调用，不推荐。
 global.FloatButton = function () {
     require('./widget/RoundButton');
     let fbUtil = require('./js/init');
