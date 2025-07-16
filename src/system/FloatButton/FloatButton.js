@@ -259,7 +259,11 @@ global.FloatButton = function () {
         ui.isUiThread() ? threads.start(initWindow) : initWindow();
     }
 
-    //初始化悬浮窗
+    // 初始化悬浮窗
+    // autojs内置函数
+    // $ui.run(callback)callback {Function} 回调函数返回 {any} callback 的执行结果将callback在 UI 线程中执行。
+    // 如果当前已经在 UI 线程中，则直接执行callback；否则将callback抛到 UI 线程中执行（加到 UI 线程的消息循环的末尾），
+    // 并等待 callback 执行结束(阻塞当前线程)。
     function initWindow() {
         mWindows.menu = floaty.rawWindow("<frame id='content' w='*' h='*' visibility='invisible' />");
         mWindows.logo = floaty.rawWindow("<frame id='content' w='auto' h='auto' />");
