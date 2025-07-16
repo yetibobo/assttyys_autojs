@@ -350,6 +350,25 @@ global.FloatButton = function () {
         mWindows.menu.setSize(mr + mConfig.size, mr * 2 + mConfig.size);
     }
 
+
+    //  Object.defineProperty不是安卓原生代码‌，而是 JavaScript 的核心 API ，作用‌
+    // （1）‌属性特性控制  // 示例：定义一个不可修改的常量属性
+                        // Object.defineProperty(obj, 'PI', {
+                        //   value: 3.14,
+                        //   writable: false
+                        // });
+                        // obj.PI = 5; // 修改无效，严格模式下报错‌:ml-citation{ref="3,10" data="citationList"}
+    // （2）‌数据劫持与响应式‌
+                //示例： 通过 getter/setter 拦截属性访问和修改，实现数据监听
+                // let value = 10;
+                // Object.defineProperty(obj, 'count', {
+                //   get() { return value; },
+                //   set(newVal) {
+                //     value = newVal;
+                //     console.log('值被修改为：', newVal); // 触发回调‌:ml-citation{ref="9,10" data="citationList"}
+                //   }
+                // });‌
+    
     function ObjectDefinePro(obj, key, action) {
         var mValue = obj[key];
         Object.defineProperty(obj, key, {
