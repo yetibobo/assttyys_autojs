@@ -23,9 +23,11 @@ import { doInitHookConsoleLog, getWebLoaded } from './common/toolAuto';
 
 // 运行webviewEvents文件夹下的index.ts，<注意>这里运行时，因进程中有import{webview}from"@/system"代码
 // 会自动运行system/index.ts的顶层代码，其中的export const webview= 会自动运行得到结果，从而创建html
-webviewEvents();    //这句代码打开了前端网页
-// 依次运行了
-// schemeList();
+webviewEvents();    //这句代码打开了前端网页，因为webviewEvents文件夹下的index.ts
+// 			依次运行了
+// schemeList();  -------这个模块通过import { webview } from '@/system'打开了system/index.ts顶层代码和赋值代码打开了网页，
+// 			且有注册返回后，监听到网页加载后setWebLoaded(true)，才能执下以下面的myFloaty.init();
+//                       所以这个模块真正是入口后的网页动作模块
 // funcList();
 // settings();
 // about();
@@ -41,12 +43,19 @@ effect$.subscribe(() => {
 	//declare的核心作用是在 TS 中桥接 JS 与类型系统，在 SQL 中桥接数据与逻辑，在语言中桥接意图与正式效力
 	//还可以声明其他脚本（如 JavaScript 库）定义的全局标识符，避免 TS 编译器报错
 	//同时根据AI提示：在AutoJS中，像floaty、console、toast等都是全局可用的内置模块，无需显式导入或实例化。
-	if (floaty.checkPermission() && getWebLoaded()) {
+	if (floaty.checkPermission() && getWebLoaded()) {  //有悬浮窗权限  且  网页已加载
 		myFloaty.init();
 	}
+
+	// 这里的问号(?.)是JavaScript/TypeScript中的‌可选链操作符‌(Optional Chaining Operator)，
+	// 用于安全访问可能为null或undefined的对象属性‌。具体解析如下：‌
+	// 当storeSettings为null或undefined时，直接跳过后续属性访问并返回undefined，
+	// 避免抛出Cannot read property 'xxx' of null/undefined错误‌。例如：
+	// 传统写法（需手动判空） if (storeSettings && storeSettings.floaty_debugger_draw) {...}
+	// 可选链写法（更简洁） if (storeSettings?.floaty_debugger_draw) {...}
 	const storeSettings = storeCommon.get('settings', {});
 	if (storeSettings?.floaty_debugger_draw) {
-		drawFloaty.init();
+		drawFloaty.init();  //用于在屏幕上可视化显示自动化脚本的操作区域和检测结果。
 	}
 	if (storeSettings?.remote_log_url) {
 		doInitHookConsoleLog(storeSettings.remote_log_url);
