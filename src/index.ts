@@ -23,11 +23,11 @@ import { doInitHookConsoleLog, getWebLoaded } from './common/toolAuto';
 
 // 运行webviewEvents文件夹下的index.ts，<注意>这里运行时，因进程中有import{webview}from"@/system"代码
 // 会自动运行system/index.ts的顶层代码，其中的export const webview= 会自动运行得到结果，从而创建html
-webviewEvents();    //这句代码打开了前端网页，因为webviewEvents文件夹下的index.ts
-// 			依次运行了
+webviewEvents();    //这句代码打开了前端网页，因为webviewEvents文件夹下的index.ts打开了schemeList.ts
+// 			依次运行了以下几个文件
 // schemeList();  -------这个模块通过import { webview } from '@/system'打开了system/index.ts顶层代码和赋值代码打开了网页，
 // 			且有注册返回后，监听到网页加载后setWebLoaded(true)，才能执下以下面的myFloaty.init();
-//                       所以这个模块真正是入口后的网页动作模块
+//                       所以这个模块真正是入口后的网页动作模块和后续悬浮按钮的启动点
 // funcList();
 // settings();
 // about();
