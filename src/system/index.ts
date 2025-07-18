@@ -14,6 +14,17 @@ import { run } from '@auto.pro/webview'
 // if (getWidthPixels() > getHeightPixels()) {
 //     needCap = '横屏';
 // }
+//  下面的core({})代码不请求任何权限，只是简单的初始化。
+// 提供常用属性和方法给其他模块使用，可以接受一些参数，示例如下:
+// core({
+//     baseWidth: 1920,
+//     baseHeight: 1080,
+//     needCap: true,
+//     needService: true,
+//     needFloaty: true,
+//     needForeground: true,
+//     needStableMode: true,
+// })
 core({
 	// needCap: needCap,
 	// capType: '同步',
