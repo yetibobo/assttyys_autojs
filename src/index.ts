@@ -62,3 +62,50 @@ effect$.subscribe(() => {
 	}
 	InputHideUtil.assistActivity(activity);    //激活输入法自适应
 });
+
+
+// 根据代码分析，ASSTTYYS NG项目主要通过配置文件自动请求了以下权限，并在运行时动态请求其他必要权限：
+
+// 自动请求的权限
+// 1. 存储权限
+// 项目在两个配置文件中都声明了存储权限的自动请求： project.json:27-31 project.json:35-39
+// WRITE_EXTERNAL_STORAGE 权限会在应用启动时自动请求，用于保存截图、日志等文件到外部存储。
+
+// 运行时权限请求实现
+// 2. 截图权限
+// 截图权限通过 requestMyScreenCapture 函数实现： toolAuto.ts:37-71
+// 该函数会：
+// 在Android 10以上且有无障碍服务时，自动点击"立即开始"按钮
+// 调用 requestScreenCaptureAsync API请求截图权限
+// 权限获取成功后初始化 helperBridge 和多点比色功能
+
+// 3. 无障碍服务权限
+// 无障碍服务权限在设置界面中处理： settings.ts:351-370
+// 系统会根据是否有Root权限采用不同策略：
+// 有Root：自动启用无障碍服务
+// 无Root：提示用户手动开启
+
+// 4. 悬浮窗权限
+// 悬浮窗权限请求实现： settings.ts:371-391
+// 通过 floaty.requestPermission() 请求权限，并轮询检查权限状态，获取成功后自动初始化悬浮窗。
+
+// 5. 电池优化忽略权限
+// 针对Android 6.0以上设备： settings.ts:343-350
+// 调用 $power_manager.requestIgnoreBatteryOptimizations() 请求忽略电池优化。
+
+// 6. 不受信任触摸权限
+// 针对Android 12以上有Root的设备： settings.ts:405-412
+// 通过Shell命令 settings put global block_untrusted_touches 0 设置允许不受信任的触摸事件。
+// 权限检查与初始化
+// 应用启动时会检查各种权限状态： settings.ts:101-152
+
+// 系统会检查：
+// 无障碍服务状态
+// 截图权限状态
+// 悬浮窗权限状态
+// 电池优化状态
+// 界面加载完成后自动请求截图权限： schemeList.ts:220-222
+
+// Notes
+// 项目采用了分层的权限请求策略：基础存储权限通过配置文件自动请求，而其他敏感权限（截图、无障碍、悬浮窗等）
+// 则在运行时根据功能需要动态请求。这种设计既保证了应用的基本功能，又避免了一次性请求过多权限导致用户拒绝的问题。
