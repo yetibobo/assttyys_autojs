@@ -23,7 +23,7 @@ import { doInitHookConsoleLog, getWebLoaded } from './common/toolAuto';
 
 // 运行webviewEvents文件夹下的index.ts，<注意>这里运行时，因进程中有import{webview}from"@/system"代码
 // 会自动运行system/index.ts的顶层代码，其中的export const webview= 会自动运行得到结果，从而创建html
-webviewEvents();
+webviewEvents();    //这句代码打开了前端网页
 // 依次运行了
 // schemeList();
 // funcList();
