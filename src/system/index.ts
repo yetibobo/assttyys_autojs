@@ -27,6 +27,7 @@ core({
 // console.log(files.cwd());
 console.log(`autojs version: ${app.autojs.versionCode}`);
 
+
 let url = 'https://assttyys.zzliux.cn/static/webview/'
 // 调试模式，可能存在有人用run.js运行脚本，这时就得用运行路径判断了
 // if (context.packageName.match(/^org.autojs.autojs(pro)?$/) && files.cwd().indexOf(context.getExternalFilesDir(null).getAbsolutePath()) === -1) {
@@ -38,6 +39,15 @@ if (isDebugPlayerRunning()) {
 	// url = 'https://assttyys.zzliux.cn/new/'
 }
 
+
+// 这里解释一下为什么export const webview = run(url, {在import时会自动执行 run()
+// ‌1.模块顶层执行特性‌
+// 当模块中包含非声明语句（如函数调用、表达式等）时，这些代码会在模块被导入时立即执行。这里的run(url, {...})是一个直接赋值表达式，属于可执行代码而非纯声明3。
+// ‌2.与IIFE的区别‌
+// 虽然代码没有使用(()=>{...})()这种显式的立即执行函数表达式(IIFE)语法，但赋值语句右侧的表达式会在求值时立即执行1。这与动态导入import()的延迟执行特性形成对比。
+// 3.若需延迟执行，应改为函数封装形式：
+// export const Webview = () => run(url, {...})
+// 这样只有在调用tWebview()时才会执行run函数4。
 export const webview = run(url, {
 	// fitsSystemWindows: 'true',
 	afterLayout() {
