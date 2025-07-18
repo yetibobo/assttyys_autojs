@@ -54,11 +54,11 @@ effect$.subscribe(() => {
 	// 传统写法（需手动判空） if (storeSettings && storeSettings.floaty_debugger_draw) {...}
 	// 可选链写法（更简洁） if (storeSettings?.floaty_debugger_draw) {...}
 	const storeSettings = storeCommon.get('settings', {});
-	if (storeSettings?.floaty_debugger_draw) {
+	if (storeSettings?.floaty_debugger_draw) {   //如果存储设置中的floaty_debugger_draw项被启用
 		drawFloaty.init();  //用于在屏幕上可视化显示自动化脚本的操作区域和检测结果。
 	}
 	if (storeSettings?.remote_log_url) {
-		doInitHookConsoleLog(storeSettings.remote_log_url);
+		doInitHookConsoleLog(storeSettings.remote_log_url);  //远程日志调用
 	}
-	InputHideUtil.assistActivity(activity);
+	InputHideUtil.assistActivity(activity);    //激活输入法自适应
 });
