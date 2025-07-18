@@ -1,8 +1,15 @@
-/**
- * 绘制用悬浮，用于
- * 1. 绘制desc命中点与未命中点(script.js)
+/*
+ * 模块实现了调试绘制功能，用于在屏幕上可视化显示自动化脚本的操作区域和检测结果。 
+ * 核心功能：
+ * 这个模块创建一个透明的悬浮窗口，在其上绘制各种调试信息，包括：
+ * 点击区域与实际点击点
+ * 1. 绘制desc多点比色的命中点与未命中点(script.js)
  * 3. 绘制多点找色命中区域(script.js)
  * 2. 绘制点击区域与实际点击点(helperBridge.js)
+ * drawFloaty 被广泛用于可视化各种操作：
+ * 多点找色可视化： script.ts:376-386
+ * 点击操作可视化： helperBridge.ts:116-125
+ * OCR结果可视化： MlkitOcr.ts:157-159
  */
 const drawFloaty = {
 	// 悬浮实例
@@ -13,7 +20,10 @@ const drawFloaty = {
 		statusBarHeight: 0
 	},
 
-	// 初始化
+	// 初始化，函数参数后的问号(option?)表示‌可选参数标记‌，
+	// 是TypeScript的语法特性，用于声明该参数是可选的。具体说明如下：
+	// ‌作用机制表示调用时可以省略option参数而不报错
+	// 通过 init() 方法创建一个全屏透明的悬浮窗口‌
 	init(option?) {
 		if (this.instacne) return;
 
@@ -22,6 +32,11 @@ const drawFloaty = {
 		}
 
 		const self = this;
+
+		// 指定悬浮窗的布局，创建并显示一个原始悬浮窗，返回一个FloatyRawWindow对象。
+		// 与floaty.window()函数不同的是，该悬浮窗不会增加任何额外设施（例如调整大小、位置按钮），
+		// 您可以根据自己需要编写任何布局。而且，该悬浮窗支持完全全屏，
+		// 可以覆盖状态栏，因此可以做护眼模式之类的应用。
 		self.instacne = floaty.rawWindow(`
             <frame>
                 <canvas id="board"/>
@@ -32,7 +47,7 @@ const drawFloaty = {
 			self.instacne.setTouchable(false);
 			self.instacne.setSize(-1, -1);
 		});
-
+		// 模块定义了三种不同颜色的画笔用于区分不同类型的绘制内容：
 		// 命中框画笔（绿）
 		const paintGreen = new android.graphics.Paint();
 		paintGreen.setAntiAlias(true); // 抗锯齿
@@ -76,7 +91,9 @@ const drawFloaty = {
 		paintLine.setStrokeWidth(1);
 		paintLine.setStyle(android.graphics.Paint.Style.STROKE);
 		paintLine.setColor(colors.parseColor('#FF963200'));
-
+		
+		// 核心绘制逻辑在 draw 事件监听器中实现：
+		// 绘制系统会根据时间戳自动清理过期的绘制内容，并根据颜色类型选择对应的画笔进行绘制。
 		self.instacne.board.on('draw', function (canvas) {
 			canvas.drawColor(0, android.graphics.PorterDuff.Mode.CLEAR);
 			const toDraw = self.toDraw || [];
