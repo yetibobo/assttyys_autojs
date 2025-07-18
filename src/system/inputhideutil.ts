@@ -2,6 +2,9 @@
 作者：神麤詭末
 QQ：2682963017
 */
+// 这个模块是由神麤詭末开发的第三方工具，专门用于解决Android应用中软键盘弹出时的界面适配问题。
+// 它通过动态调整布局参数来确保用户界面在软键盘弹出时仍然可用，避免了输入框被键盘遮挡的问题。
+
 /*eslint-disable */
 var InputHideUtil = function () {
     // importClass(Packages.android.graphics.Rect);
@@ -46,7 +49,8 @@ var InputHideUtil = function () {
         contentViewMargin = frameLayoutParams.bottomMargin;
 
     }
-    
+
+    //为当前Activity启用软键盘自适应功能
     InputHideUtil.assistActivity = function(activity, scrollView?, ignoreView?) {
         new InputHideUtil(activity, scrollView, ignoreView);
     }
