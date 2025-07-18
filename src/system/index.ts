@@ -25,7 +25,7 @@ import { run } from '@auto.pro/webview'
 //     needForeground: true,
 //     needStableMode: true,
 // })
-core({
+core({  //本身不请求任何权限
 	// needCap: needCap,
 	// capType: '同步',
 	// needFloaty: true,
