@@ -50,17 +50,34 @@ if (isDebugPlayerRunning()) {
 // 这样只有在调用tWebview()时才会执行run函数4。
 export const webview = run(url, {
 	// fitsSystemWindows: 'true',
-	afterLayout() {
+	afterLayout() {  //afterLayout: Function 有时要紧跟着布局做系统初始化，可以放在这个函数里
 		if (device.sdkInt >= 23) { // SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
 			setSystemUiVisibility('有状态栏的沉浸式界面')
 		}
-		activity.getWindow().setStatusBarColor(android.graphics.Color.TRANSPARENT);
+		activity.getWindow().setStatusBarColor(android.graphics.Color.TRANSPARENT);  //实现了将Android应用的状态栏颜色设置为透明的功能。
 	},
-	chromeClientOption: {
+	// 以上这里首先检查Android SDK版本，如果是API 23（Android 6.0）及以上，会设置 SYSTEM_UI_FLAG_LIGHT_STATUS_BAR 标志，然后将状态栏颜色设为透明
+
+	
+	// 自定义 WebChromeClient 的事件，它的常用事件有
+	// onCreateWindow打开新窗口时的回调
+	// onCloseWindow关闭窗口时的回调
+	// onJsAlert监听 alert
+	// onJsConfirm监听 confirm
+	// onJsPrompt监听 prompt(本模块通过这个事件来通信)
+	// onProgressChanged 网页的加载进度改变时的回调
+	chromeClientOption: {  
 		onConsoleMessage: function (msg) {
 			console.log(msg.message());
 		}
 	},
+
+	// webviewClientOption: object 自定义 WebViewClient 的事件，它的常用事件有
+	// onPagestarted 网页开始加载时的回调
+	// onPageFinished网页加载结束的回调
+	// shouldOverrideUrlLoading拦截 url 跳转
+	// onReceivedError 错误回调
+	// onReceivedSslError  https 错误回调
 	webviewClientOption: {
 		shouldOverrideUrlLoading: function (view, url) {
 			if (url) {
