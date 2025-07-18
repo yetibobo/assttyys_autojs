@@ -44,7 +44,7 @@ effect$.subscribe(() => {
 	//还可以声明其他脚本（如 JavaScript 库）定义的全局标识符，避免 TS 编译器报错
 	//同时根据AI提示：在AutoJS中，像floaty、console、toast等都是全局可用的内置模块，无需显式导入或实例化。
 	if (floaty.checkPermission() && getWebLoaded()) {  //有悬浮窗权限  且  网页已加载
-		myFloaty.init();
+		myFloaty.init();    //这里开启了大柒的县浮按钮，用户可以在这里操作
 	}
 
 	// 这里的问号(?.)是JavaScript/TypeScript中的‌可选链操作符‌(Optional Chaining Operator)，
