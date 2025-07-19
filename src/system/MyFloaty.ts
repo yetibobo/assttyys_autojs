@@ -245,8 +245,9 @@ export class MyFloaty {
 		if (app.autojs.versionCode >= 8081200) {
 			// @ts-expect-error d.ts文件问题
 			const capOpt = images.getScreenCaptureOptions();
+			// 通过报错来切换图标状态,null == capOpt 检查 capOpt 是否为 null。当 images.getScreenCaptureOptions() 返回 null 时，说明没有截图权限
 			if (null == capOpt) {
-				// 通过报错来切换图标状态
+
 				// script[type](this); 这行代码中方括号 [type] 的含义。
 				// 动态属性访问语法
 				// 这是 JavaScript/TypeScript 中的动态属性访问语法。script[type] 等价于 script.type，但允许使用变量来动态确定要访问的属性名。
