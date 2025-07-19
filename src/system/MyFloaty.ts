@@ -221,6 +221,25 @@ export class MyFloaty {
 		});
 	}
 
+
+	// 	thisRun 核心功能
+	// thisRun 方法实现了带权限检查的脚本启动功能： MyFloaty.ts:194-209
+	
+	// 功能分析
+	// 1. 参数处理
+	// 方法接收一个可选的 type 参数，默认值为 'run'。这个参数决定了调用 script 对象的哪个方法（run 或 autoRun）。
+	
+	// 2. 版本检查和权限验证
+	// 对于 Auto.js Pro 版本 >= 8081200 的情况，方法会检查截图权限：
+	
+	// 通过 images.getScreenCaptureOptions() 获取截图选项
+	// 如果返回 null，说明没有截图权限，会显示 "无截图权限" 的提示
+	// 无论是否有权限，都会继续执行脚本
+	// 3. 脚本执行
+	// 最终都会调用 script[type](this)，其中：
+	
+	// type 可能是 'run' 或 'autoRun'
+	// this 指向当前 MyFloaty 实例，传递给脚本系统
 	thisRun(type?: string) {
 		type = type || 'run';
 		if (app.autojs.versionCode >= 8081200) {
