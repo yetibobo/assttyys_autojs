@@ -95,7 +95,7 @@ export class MyFloaty {
 				if (state) {
 					const storeSettings = storeCommon.get('settings', {});
 					if (storeSettings.floaty_scheme_openApp) {
-						script.launchRelatedApp();
+						script.launchRelatedApp();  //运行关联APP
 					}
 					self.thisRun();
 				} else {
@@ -116,7 +116,7 @@ export class MyFloaty {
 			// 点击事件
 			.onClick((_view, _name) => {
 				script.stop();
-				schemeDialog.show(this);
+				schemeDialog.show(this);   //创建一个包含方案列表的UI对话框
 				self.runEventFlag = false;
 				return false;
 			});
@@ -247,6 +247,28 @@ export class MyFloaty {
 			const capOpt = images.getScreenCaptureOptions();
 			if (null == capOpt) {
 				// 通过报错来切换图标状态
+				// script[type](this); 这行代码中方括号 [type] 的含义。
+				// 动态属性访问语法
+				// 这是 JavaScript/TypeScript 中的动态属性访问语法。script[type] 等价于 script.type，但允许使用变量来动态确定要访问的属性名。
+				// 在 MyFloaty.ts 中的具体使用
+				// 在 src/system/MyFloaty.ts:194-209 的 thisRun 方法中，您可以看到这个用法：
+				// thisRun(type?: string) {  
+				//     type = type || 'run';  
+				//     // ...  
+				//     script[type](this);  
+				// }
+				// 这里的 type 是一个字符串变量，其值可能是：
+				// 'run' - 调用 script.run(this)
+				// 'autoRun' - 调用 script.autoRun(this)
+				// Script 类中对应的方法
+				// 在 Script 类中确实存在这些方法：
+				// run() 方法：src/system/script.ts:523-526
+				// autoRun() 方法：src/system/script.ts:612-654
+				// 实际调用场景
+				// 这种动态调用在悬浮按钮系统中被使用：
+				// 普通运行：当用户点击 RunStop 按钮时，type 为 'run'，执行 script.run(this)
+				// 自动运行：当用户点击 SchemeAutoRun 按钮时，type 为 'autoRun'，执行 script.autoRun(this)
+				// 这种设计允许同一个 thisRun 方法根据传入的参数动态调用不同的脚本执行方法，避免了代码重复。
 				script[type](this);
 				toastLog('无截图权限');
 			} else {
