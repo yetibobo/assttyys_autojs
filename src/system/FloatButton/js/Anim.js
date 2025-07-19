@@ -4,6 +4,12 @@
  * @Date: 2021-04-18 06:14:13
  * @Version: Auto.Js Pro
  * @Description: 动画模块
+ 
+ * Anim.js 文件大量使用了 Auto.js Pro 的内置函数和 API。
+ * 项目使用了专门的 @auto.pro/webpack-plugin 来处理 Auto.js Pro 代码的编译： webpack.auto.config.js:22-27
+ * 这个插件的作用是将 TypeScript/JavaScript 代码编译成 Auto.js Pro 运行时可以执行的格式，同时保持对 Auto.js Pro 内置 API 的访问能力
+ * 确保内置函数调用在打包后仍然有效。
+ 
  * 文件实现了悬浮按钮系统的动画功能模块，主要负责处理悬浮按钮的显示、隐藏、菜单展开/收起以及位置切换等各种动画效果
  * 该动画模块被 FloatButton.js 主文件引入并实例化： FloatButton.js:15-16
  * 动画实例在 FloatButton 构造函数中创建，并将状态变化回调绑定到配置对象： FloatButton.js:66-67
