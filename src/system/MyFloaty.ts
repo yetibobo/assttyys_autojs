@@ -9,7 +9,7 @@ import { storeCommon } from '@/system/Store/store';
  * 对大柒开发的 FloatButton 库进行了封装，就是配置好了的 FloatButton，为自动化系统提供了便捷的悬浮控制界面
  * 这里虽然MyFloaty 被定义为一个类，但文件同时导出了一个实例：export default new MyFloaty();
  * 这意味着 MyFloaty.ts 文件导出的是一个已经实例化的对象，而不是类本身。
- * 悬浮按钮实例，共6个按钮，定义了事件，对大柒的悬浮按钮进行封装
+ * 悬浮按钮实例，共6个按钮，定义了事件，对大柒的悬浮按钮进行封装，同时导入了@/system/script脚本执行模块，可根据注册事件执行脚本
  */
 	// 根据代码分析，MyFloaty.ts 主要注册了以下几类响应事件：
 
