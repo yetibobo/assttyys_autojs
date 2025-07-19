@@ -31,6 +31,63 @@ import { commonConfigVal } from '@/common/commonConfig';
 // const script = new Script();export default script;
 // 导出的只是一个实例，本项目也仅用了一个脚本实例
 
+
+// 模块中每个方法的功能实现。这个文件是 ASSTTYYS NG 项目的核心脚本执行引擎，包含了自动化系统的主要功能。
+// 核心类结构
+// Script 类是整个自动化系统的中央控制器， 定义了所有必要的属性和状态管理。
+// 主要方法功能分析
+
+// OCR 相关方法
+// initOcrIfNeeded() - 根据设置动态初始化不同类型的OCR检测器（MlkitOcr、MlkitOcr2、YunxiOcr）
+// getOcrDetector() 和 getOcr() - 获取OCR检测器实例，确保只在第一次调用时初始化
+// findText() - 在指定区域内查找文本，支持超时和匹配模式设置
+// findNum() - 专门用于查找数字的方法，会对识别结果进行字符修正（如将s/S替换为5）
+// findTextWithCompareColor() - 先进行多点比色验证场景，再执行文本查找的组合方法
+// findTextByOcrResult() - 在已有OCR结果中查找特定文本
+
+// 截图和图像处理方法
+// keepScreen() - script.ts:207-214 控制截图功能，可选择是否初始化红色通道以提高多点找色效率
+// initRedList() - 初始化红色通道数据，用于优化多点找色性能
+
+// 功能列表和配置管理
+// getFuncList() - 根据方案获取功能列表，并将坐标从开发分辨率转换为运行分辨率
+// initFuncList() - 初始化当前方案的功能列表
+// initMultiDetectColors() 和 initMultiFindColors() - script.ts:320-354 初始化多点比色和多点找色配置，进行坐标转换
+
+// 多点找色和比色方法
+// findMultiColor() - 执行多点找色操作
+// findMultiColorLoop() - script.ts:485-496 循环执行多点找色直到成功或超时
+// compareColorLoop() - script.ts:505-517 循环执行多点比色直到满足条件
+
+// 脚本执行控制方法
+// run() - script.ts:523-526 公共接口，设置当前方案并启动脚本执行
+// _run() - script.ts:536-603 内部执行方法，创建执行线程并在无限循环中执行功能列表
+// autoRun() - script.ts:612-654 智能运行方法，根据当前界面自动选择合适的方案执行
+// stop() 和 _stop() - script.ts:659-680 停止脚本执行，包括公共接口和内部实现
+// rerun() - 重新运行脚本，支持切换方案、返回上个方案等特殊操作
+
+// 核心操作方法
+// oper() - script.ts:731-801 最关键的操作方法，执行多点比色并根据结果进行点击操作
+// desc() - 执行功能的多点比色检测，判断当前界面是否匹配
+
+// 方案和配置管理
+// setCurrentScheme() - script.ts:833-844 设置当前执行方案和运行时参数
+// search() 和 questionSearch() - 提供搜索功能，包括逢魔密信题库搜索
+
+// 应用管理方法
+// launchRelatedApp() - script.ts:855-864 启动关联应用
+// stopRelatedApp() - script.ts:866-904 停止关联应用，支持多种停止模式
+
+// 交互操作方法
+// regionClick() - script.ts:906-910 区域点击操作
+// regionSwipe() 和 regionBezierSwipe() - script.ts:912-922 滑动操作，包括普通滑动和贝塞尔曲线滑动
+
+// 回调管理方法
+// setRunCallback() 和 setStopCallback() - 设置脚本启动和停止时的回调函数
+
+// 单例实现
+// 文件末尾 script.ts:925-942 创建了单例实例并设置了事件监听器，确保整个应用只有一个脚本执行引擎。
+
 export class Script {
 	runThread: any; // 脚本运行线程
 	runCallback: Function; // 运行后回调，一般用于修改悬浮样式
