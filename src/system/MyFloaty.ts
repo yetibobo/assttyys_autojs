@@ -6,8 +6,37 @@ import { showScheduleDialog } from '@/system/Schedule/scheduleDialog';
 import { storeCommon } from '@/system/Store/store';
 
 /**
- * 悬浮按钮，对大柒的悬浮按钮进行封装
+ * 对大柒开发的 FloatButton 库进行了封装，就是配置好了的 FloatButton，为自动化系统提供了便捷的悬浮控制界面
+ * 这里虽然MyFloaty 被定义为一个类，但文件同时导出了一个实例：export default new MyFloaty();
+ * 这意味着 MyFloaty.ts 文件导出的是一个已经实例化的对象，而不是类本身。
+ * 悬浮按钮实例，共6个按钮，定义了事件，对大柒的悬浮按钮进行封装
  */
+	// 根据代码分析，MyFloaty.ts 主要注册了以下几类响应事件：
+
+	// 按钮点击事件
+	// MyFloaty 为每个悬浮按钮注册了 onClick 事件处理器：
+	// RunStop 按钮： MyFloaty.ts:60-77
+	// SchemeListMenu 按钮： MyFloaty.ts:87-92
+	// SchemeAutoRun 按钮： MyFloaty.ts:101-106
+	// CapScreen 按钮（可选）： MyFloaty.ts:113-128
+	// ViewLogConsole 按钮（可选）： MyFloaty.ts:136-145
+	// ScheduleList 按钮（可选）： MyFloaty.ts:154-156
+
+	// 脚本引擎回调事件
+	// MyFloaty 还注册了与脚本引擎相关的回调事件：
+	// 运行回调事件： MyFloaty.ts:167-178
+	// 停止回调事件： MyFloaty.ts:180-191
+
+	// 事件处理机制
+	// 这些事件通过底层的 FloatButton 系统进行管理。每个按钮的点击事件都会：
+	// 执行相应的功能逻辑
+	// 管理 runEventFlag 状态防止重复触发
+	// 返回 false 来关闭菜单
+	// 脚本引擎的回调事件则用于同步悬浮按钮的视觉状态，包括按钮选中状态和 logo 颜色变化。
+
+	// Notes： MyFloaty.ts 本身不直接处理底层的触摸事件或窗口事件，这些由 FloatButton.js 系统处理。
+	// MyFloaty 主要负责业务逻辑层面的事件响应，将用户操作转换为具体的自动化功能调用。
+
 export class MyFloaty {
 	fb: any;
 	runEventFlag: boolean = false;
