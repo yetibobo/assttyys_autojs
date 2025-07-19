@@ -141,13 +141,13 @@ function CreateRoundButtonView(name, mGlobal) {
         return state;
     }
 
-    // 将视图转换为复选框的方法
+    // 将视图转换为复选框的方法，通过代码逻辑让普通按钮具备复选框的核心功能‌
     this.toCheckbox = function (action) {
         action(new ViewToCheckbox(this));
         return this;
     }
 
-    // 内部类：将视图转换为复选框
+    // 内部类：通过代码逻辑让普通按钮具备复选框的核心功能‌
     function ViewToCheckbox(viewUtil) {
         state = false;
         items = {};
