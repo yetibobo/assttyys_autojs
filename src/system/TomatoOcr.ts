@@ -1,3 +1,8 @@
+/*
+ * 这个模块应该是被废弃了
+
+*/
+
 import { nlpSimilarity } from "@/common/toolAuto";
 import drawFloaty from "./drawFloaty";
 
@@ -31,20 +36,20 @@ export class TomatoOcrDetector {
         const result = resultOrigin.map(item => {
             return new OcrResult(item.score, item.words, item.rotation, [{
                 // 左上
-                x: item.location[0][0],
-                y: item.location[0][1]
+                x: item.__cpLocation[0][0],
+                y: item.__cpLocation[0][1]
             }, {
                 // 右上
-                x: item.location[1][0],
-                y: item.location[1][1]
+                x: item.__cpLocation[1][0],
+                y: item.__cpLocation[1][1]
             }, {
                 // 右下
-                x: item.location[2][0],
-                y: item.location[2][1]
+                x: item.__cpLocation[2][0],
+                y: item.__cpLocation[2][1]
             }, {
                 // 左下
-                x: item.location[3][0],
-                y: item.location[3][1]
+                x: item.__cpLocation[3][0],
+                y: item.__cpLocation[3][1]
             }]);
         });
         return result;
