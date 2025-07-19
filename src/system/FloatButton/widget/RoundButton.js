@@ -4,6 +4,20 @@
  * @Date: 2021-04-18 04:34:46
  * @Version: Auto.Js Pro
  * @Description: 自定义控件 按钮
+ 
+ * 这个文件定义了一个自定义的圆形按钮 UI 组件
+ * 用于悬浮按钮系统中的按钮元素。实现如下：
+ * UI 组件定义：通过 render() 方法定义按钮的 XML 布局结构
+ * 样式配置：设置默认的外观属性，包括内边距、居中对齐、背景和着色
+ * 组件注册：将自定义组件注册到 Auto.js Pro 的 UI 系统中
+ * 通过 ui.registerWidget("widget-RoundButton", RoundButton) 注册后，
+ * 可以在 XML 布局中使用 <widget-RoundButton> 标签来创建圆形按钮实例。
+ * Android 确实没有原生的圆形按钮组件，这就是为什么 ASSTTYYS NG 项目需要自定义实现 RoundButton 组件的原因。
+ * Android 系统提供的原生按钮组件（如 Button、ImageButton）默认都是矩形的。要实现圆形按钮效果，开发者通常需要：
+ * 使用自定义背景drawable：创建圆形背景资源
+ * 自定义View：继承现有组件并重写绘制逻辑
+ * 使用第三方库：引入专门的圆形按钮库
+ 
  * @LastEditors: 大柒
  * @LastEditTime: 2021-04-19 12:19:40
  */
