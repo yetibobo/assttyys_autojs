@@ -411,6 +411,8 @@ global.FloatButton = function () {
         mConfig.isInit ? ui.run(action) : mActions.push(() => ui.run(action));
     }
 
+
+    //创建触摸监听器，对触摸各种动作进行响应
     function createTouchListener(win) {
         let x, y, x1, y1, winX, winY, isMove = false;
         mViewUtils.logo.getView().setOnTouchListener(function (view, event) {
