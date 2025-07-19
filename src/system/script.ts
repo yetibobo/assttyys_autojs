@@ -26,6 +26,11 @@ import { commonConfigVal } from '@/common/commonConfig';
 /**
  * 脚本对象，一个程序只能有一个
  */
+
+// 注意这里虽然建创了一个Script类，但最后
+// const script = new Script();export default script;
+// 导出的只是一个实例，本项目也仅用了一个脚本实例
+
 export class Script {
 	runThread: any; // 脚本运行线程
 	runCallback: Function; // 运行后回调，一般用于修改悬浮样式
