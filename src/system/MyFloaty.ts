@@ -241,6 +241,9 @@ export class MyFloaty {
 	// type 可能是 'run' 或 'autoRun'
 	// this 指向当前 MyFloaty 实例，传递给脚本系统
 	thisRun(type?: string) {
+		// 这个||<逻辑或>用来设置默认值
+		// 如果 type 有值（非空、非 undefined、非 null），则使用 type 的值
+		// 如果 type 为空值（undefined、null、空字符串等），则使用 'run' 作为默认值
 		type = type || 'run';
 		if (app.autojs.versionCode >= 8081200) {
 			// @ts-expect-error d.ts文件问题
