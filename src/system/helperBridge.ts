@@ -3,6 +3,49 @@ import drawFloaty from '@/system/drawFloaty';
 import { getNormalRandom, getRegionBiasRnd2, hash, strHashToNum } from '@/common/toolAuto';
 import { IMyAutomator } from '@/system/MyAutomator';
 
+// 核心功能概述：设备操作桥接层，负责抽象化设备交互和坐标转换
+// helperBridge.ts 模块实现了以下主要功能：
+
+// 1. 坐标系统转换
+// src/system/helperBridge.ts:57-98
+// 该模块的核心功能之一是将开发分辨率（1280x720）的坐标转换为运行时设备的实际坐标。这确保了脚本在不同分辨率的设备上都能正确执行。
+
+// 2. 点击操作实现
+// src/system/helperBridge.ts:107-136
+// regionClick() 方法是项目中所有点击动作的核心实现，它接收坐标数组并执行实际的点击操作。该方法还集成了智能坐标计算，通过 getRegionBiasRnd2() 生成更人性化的点击位置。
+
+// 3. 滑动和手势操作
+// src/system/helperBridge.ts:164-176
+// 模块提供了多种滑动操作方法，包括普通滑动 regionSwipe()、贝塞尔曲线滑动 regionBezierSwipe() 和复杂手势 regionGesture()。
+
+// 4. ScriptLib 集成
+// src/system/helperBridge.ts:42-54
+// 该模块集成了 ScriptLib 的 AnchorGraphicHelper，这是一个高性能的图色识别库，用于多点比色和多点找色操作。
+
+// 在项目架构中的作用
+// 与脚本引擎的集成
+// src/system/script.ts:107
+
+// Script 类在构造函数中引用了 helperBridge 实例，使得所有的设备操作都通过这个统一的桥接层进行。
+// 实际调用链路
+// 当脚本执行时，调用流程如下：
+
+// script.oper() 检测到界面匹配 src/system/script.ts:789-792
+// 调用 helperBridge.regionClick() 执行点击
+// 坐标通过 regionClickTrans() 转换
+// 最终通过 automator.press() 执行实际点击
+// 权限初始化
+// src/common/toolAuto.ts:67-68
+// 在获取截图权限成功后，系统会调用 helperBridge.init() 初始化 ScriptLib，然后初始化多点比色数据。
+
+// 设计优势
+// 这种桥接层设计的优势在于：
+
+// 抽象化设备操作：统一了不同类型的设备交互
+// 坐标自动转换：解决了多分辨率兼容问题
+// 操作智能化：通过随机偏移使自动化行为更接近人类操作
+// 高性能图色识别：集成 ScriptLib 提供高效的视觉识别能力
+
 // const normal = -1; //定义常量
 // const left = 0;
 // const center = 1;
