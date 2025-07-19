@@ -4,11 +4,30 @@
  * @Date: 2021-04-18 04:29:01
  * @Version: Auto.Js Pro
  * @Description: 工具类
+ * 悬浮按钮系统中的工具类模块，主要实现了屏幕尺寸转换和屏幕方向检测功能并提供给FloatButton.js使用
+ 
  * @LastEditors: 大柒
  * @LastEditTime: 2021-04-19 12:19:14
  */
 
 /*eslint-disable */
+
+// 核心功能实现
+// 该文件导出一个 mUtil 工具对象，提供以下三个主要功能：
+// 1. 像素密度转换函数
+// dp2px(dp): 将 dp 单位转换为像素值
+// px2dp(px): 将像素值转换为 dp 单位
+// 这些函数基于设备的像素密度进行计算： init.js:14-18
+// 2. 屏幕方向检测
+// isHorizontalScreen() 函数检测当前屏幕是否为横屏模式： init.js:19-32
+// 该函数通过检查 config.orientation 来判断屏幕方向，返回 true 表示横屏，false 表示竖屏。
+// 在悬浮按钮系统中的使用
+// 该工具模块被 FloatButton.js 主文件引入并使用： FloatButton.js:13
+// 在悬浮按钮的配置中，使用这些工具函数来设置尺寸和检测屏幕方向： FloatButton.js:26-35
+// Notes
+// init.js 是悬浮按钮系统的基础工具模块，为整个悬浮按钮 UI 组件提供了必要的屏幕适配和方向检测功能。
+// 这些工具函数确保悬浮按钮能够在不同屏幕密度和方向的设备上正确显示和定位。
+
 // 创建一个空对象
 let mUtil = {};
 
@@ -59,3 +78,4 @@ let mUtil = {};
 })();
 
 module.exports = mUtil;
+
