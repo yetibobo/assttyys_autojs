@@ -28,10 +28,11 @@ import { storeCommon } from '@/system/Store/store';
 	// 停止回调事件： MyFloaty.ts:180-191
 
 	// 事件处理机制
-	// 这些事件通过底层的 FloatButton 系统进行管理。每个按钮的点击事件都会：
-	// 执行相应的功能逻辑
-	// 管理 runEventFlag 状态防止重复触发
-	// 返回 false 来关闭菜单
+	// 这些事件通过底层的 FloatButton 系统进行管理。<<每个按钮的点击事件都会>>：
+	// 1.执行相应的功能逻辑
+	// 2.管理 runEventFlag 状态防止重复触发
+	// 3.返回 false 来关闭菜单
+
 	// 脚本引擎的回调事件则用于同步悬浮按钮的视觉状态，包括按钮选中状态和 logo 颜色变化。
 
 	// Notes： MyFloaty.ts 本身不直接处理底层的触摸事件或窗口事件，这些由 FloatButton.js 系统处理。
