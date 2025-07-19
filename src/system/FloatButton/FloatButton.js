@@ -3,6 +3,27 @@
  * @QQ: 531310591@qq.com
  * @Date: 2021-04-18 04:22:51
  * @Version: Auto.Js Pro
+ * 悬浮按钮系统的核心模块，实现了完整的悬浮窗按钮功能。
+    // 该文件导入了多个子模块：
+    // RoundButton - 圆形按钮 UI 组件
+    // init - 工具类，提供屏幕适配功能
+    // CreateRoundButtonView - 按钮视图创建器
+    // Anim - 动画处理模块
+    // 该悬浮按钮系统被 MyFloaty.ts 使用，为整个自动化系统提供快捷操作入口
+    // 1. 悬浮窗管理
+    // 系统管理两个主要的悬浮窗：logo 窗口和 menu 窗口： FloatButton.js:262-291
+    // Menu 窗口的位置基于 logo 窗口的位置计算： FloatButton.js:303-307
+    // 用户点击 logo 窗口会触发 menu 窗口的显示/隐藏： FloatButton.js:394-395
+    // 2. 按钮动态添加
+    // 通过 addItem 方法可以动态添加新的功能按钮： FloatButton.js:140-151
+    // 每个按钮都通过 CreateRoundButtonView 创建，并自动集成到菜单系统中。
+    // 3. 触摸交互处理
+    // 实现了完整的触摸交互逻辑，包括拖拽、点击和菜单切换： FloatButton.js:369-406
+    // 4. 动画系统集成
+    // 集成了动画模块，提供流畅的用户交互体验： FloatButton.js:65-67
+    // 5. 配置管理
+    // 提供了丰富的配置选项，包括尺寸、颜色、动画时间等： FloatButton.js:24-63
+ 
  * @Description: 悬浮按钮模块入口
  * @LastEditors: 大柒
  * @LastEditTime: 2021-04-19 16:44:52
