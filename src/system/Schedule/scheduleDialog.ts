@@ -1,3 +1,23 @@
+// 1.该对话框创建一个UI列表视图来显示不同状态的定时任务，包括正在执行、队列中和等待执行的任务 
+
+// 2. 动态数据获取 - 从调度系统获取实时的任务状态数据：
+// 获取当前正在运行的任务 
+// 获取任务队列中的任务 
+// 获取等待执行的任务并按执行时间排序 
+
+// 3. 任务交互功能 - 用户可以点击等待中的任务来立即执行它们 
+// 与悬浮控件的集成
+// 该对话框通过 showScheduleDialog 函数被悬浮控件调用。在 MyFloaty.ts 中，当用户点击 ScheduleList 按钮时会触发此对话框 
+// 时间格式化功能
+// 对话框包含两个辅助函数：
+
+// formatDate - 将日期格式化为可读的字符串格式 
+// bueatifyTime - 将时间差转换为人性化的描述（如"将于2小时后执行"）
+
+// 与调度系统的集成
+// 该对话框与 src/system/Schedule/index.ts 中的调度系统紧密集成，
+// 通过调用 schedule.getRunningJub()、schedule.getJobQueue() 和 schedule.getJobList() 等方法获取实时的任务状态数据 
+
 import schedule from '@/system/Schedule/index';
 
 export const showScheduleDialog = function () {
