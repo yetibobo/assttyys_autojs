@@ -1,4 +1,4 @@
-import { merge } from '@/common/tool';
+import { merge } from '@/common/tool';    //深度合并
 import store, { storeCommon } from '@/system/Store/store';
 import funcList from '@/common/funcListIndex';
 import defaultSchemeList from '@/common/schemeList';
@@ -131,6 +131,8 @@ export class Script {
 	 * @param {Script} thisScript
 	 * @param options
 	 */
+
+	//初始化doPush 属性，在具体下面this.doPush 被赋值为从 @/common/toolAuto 导入的 doPush 函数
 	doPush: (thisScript: Script, options: {
 		text: string,
 		before?: () => void,
@@ -168,11 +170,26 @@ export class Script {
 		};
 		this.helperBridge = helperBridge;
 		this.storeCommon = storeCommon;
-		this.doPush = doPush;
+
+		// 推送通知会发送到以下外部服务之一，而不是在应用UI界面显示：
+		// 1. oneBot推送 - 发送到QQ机器人或其他oneBot兼容服务
+		// 2. Gotify推送 - 发送到自建的Gotify推送服务器 GotifyPushClient.ts:25-46
+		// 3. pushplus推送 - 发送到pushplus推送服务，支持微信等多种通知方式
+		this.doPush = doPush;    //doPush 属性在 Script 类构造函数中被赋值为从 @/common/toolAuto 导入的 doPush 函数
+
+		// UI线程中显示Toast - 通过 @/common/toolAuto中的 ui.run() 确保Toast在UI线程中显示，
+		// 调用内部的 _toast 函数来创建Android原生Toast toolAuto.ts:82-103
+		// 控制台日志记录 - 同时将消息输出到控制台，方便调试和日志追踪
+		// 在项目中的广泛使用
+		// 这个函数在整个自动化系统中被大量使用：
 		this.myToast = myToast;
+
+		// 导入src\system\Schedule\index.ts  计划任务
 		this.schedule = schedule;
 	}
 
+
+	//OCR动态初始化和切换功能
 	initOcrIfNeeded() {
 		const storeSettings = storeCommon.get('settings', {});
 		if (!this.ocrDetector || storeSettings.ocrType !== this.ocr.typeName) {
@@ -200,6 +217,24 @@ export class Script {
 		return this.ocr;
 	}
 
+
+	// 	初始化OCR检测器：调用 this.initOcrIfNeeded() 确保OCR检测器已正确初始化
+	// 获取OCR实例：通过 this.getOcr() 获取当前配置的OCR实现（支持MlkitOcr、MlkitOcr2、YunxiOcr三种类型）
+	// 执行文本查找：调用OCR实例的 findText 方法，传入一个获取屏幕截图的回调函数
+	// 其 findText 方法会循环调用这个回调函数获取截图，直到找到匹配的文本或超时
+
+	// 	尖括号 < > 用于表示‌泛型类型参数‌，具体作用如下：
+	// ‌Array<number> 和 Array<OcrResult>‌
+	// 表示数组的元素类型，例如 Array<number> 指该数组仅包含数字类型元素，
+	// Array<OcrResult> 指返回的数组元素为 OcrResult 类型的对象。
+	// 这是TypeScript或现代JavaScript中的泛型语法，用于增强类型安全性1113。
+	// ‌泛型的优势 提供编译时类型检查，避免运行时类型错误。
+
+	// text: 要查找的目标文本
+	// timeout: 超时时间（毫秒）
+	// region: 搜索区域坐标数组 [x1, y1, x2, y2]
+	// textMatchMode: 文本匹配模式（如"包含"、"模糊"等）
+	
 	findText(text: string, timeout: number, region: Array<number>, textMatchMode: string): Array<OcrResult> {
 		this.initOcrIfNeeded();
 		return this.getOcr().findText(function () {
@@ -208,6 +243,30 @@ export class Script {
 		}, text, timeout, region, textMatchMode);
 	}
 
+
+
+	//            Array<OcrResult>
+	//关于Ocr执行后返回的对对像，是一个OcrResult 结构的对像
+	// OcrResult 对象包含以下属性：
+	// label: 识别出的文本内容
+	// confidence: 识别置信度
+	// points: 文本在屏幕上的坐标点数组
+	// similar: 相似度（在模糊匹配时使用）
+
+
+	// findNum 方法实现了专门用于识别和提取数字的OCR功能，它基于 findText 方法但增加了数字识别的特殊处理逻辑。
+	// 核心实现流程
+	// 该方法的执行流程如下：
+	// 初始化OCR检测器：调用 this.initOcrIfNeeded() 确保OCR检测器已正确初始化
+	// 执行数字文本查找：使用正则表达式 '\\d+' 作为搜索模式，以"包含"模式查找所有数字文本
+	// 字符纠错处理：对识别结果进行字符替换，修正OCR常见的识别错误：
+	// s/S → 5
+	// o/O → 0
+	// z/Z → 2
+	// 结果过滤：只保留纯数字的识别结果，使用正则表达式 ^\d+$ 验证 
+	// 截图获取机制
+	// 与 findText 方法相同，使用回调函数获取屏幕截图
+	
 	findNum(timeout: number, region: Array<number>): Array<OcrResult> {
 		this.initOcrIfNeeded();
 		return this.getOcr().findText(function () {
@@ -226,7 +285,14 @@ export class Script {
 	}
 
 	/**
-	 * 先比色，再findText
+	 * 通过 this.oper(currFunc) 先进行颜色比较验证当前场景是否正确，避免在错误场景下执行耗时的OCR操作。
+  	 * 先比色，再findText
+	 * 参数说明
+	 * text: 要查找的目标文本
+	 * timeout: 总超时时间（毫秒）
+	 * region: 搜索区域坐标数组
+	 * textMatchMode: 文本匹配模式
+	 * currFunc: 当前功能配置，用于场景验证
 	 */
 	findTextWithCompareColor(text: string, timeout: number, region: Array<number>, textMatchMode: string, currFunc: IFunc): Array<OcrResult> {
 		this.initOcrIfNeeded();
@@ -241,7 +307,7 @@ export class Script {
 			const result = this.getOcr().findText(function () {
 				self.keepScreen(); // 更新图片
 				return self.helperBridge.helper.GetBitmap(); // 返回bmp
-			}, text, 0, region, textMatchMode);
+			}, text, 0, region, textMatchMode);     //返回result的值为OcrResult数组
 
 			if (result.length !== 0) {
 				return result;
@@ -255,6 +321,10 @@ export class Script {
 		}
 	}
 
+
+	// findTextByOcrResult 方法实现了基于已有OCR识别结果进行文本匹配的功能，
+	// 它不会重新进行屏幕截图和OCR识别，而是直接在现有的OCR结果中查找匹配的文本。
+	// 返回一个文本数组
 	findTextByOcrResult(text: string, ocrResult: Array<OcrResult>, textMatchMode: string, similarityRatio?: number): Array<OcrResult> {
 		this.initOcrIfNeeded();
 		return this.getOcr().findTextByOcrResult(text, ocrResult, textMatchMode, similarityRatio);
@@ -289,8 +359,26 @@ export class Script {
 	 * 设置启动后回调
 	 * @param {Function} callback
 	 */
+
+	// setRunCallback 方法用于设置脚本运行后的回调函数，本项目主要用于在脚本启动时修改悬浮按钮的样式状态。
+	// 在src/system/MyFloaty.ts中回调函数被定义，内容如下：
+		// //script.setRunCallback(function () {
+		// 		self.runEventFlag = true;
+		// 		setTimeout(() => {
+		// 			self.runEventFlag = false;
+		// 		}, 500);
+		// 		runStopItem.setChecked(true);
+		// 		ui.run(function () {
+		// 			self.fb.getView('logo').setColorFilter(colors.argb(255, 0x08, 0xbc, 0x92)); //设置颜色
+		// 		});
+		// 	});
+		//  然后在_run 方法中，当脚本线程成功启动后会调用这个回调
+		// 	if (typeof this.runCallback === 'function') {
+		// 		this.runCallback();
+		// 	}
+
 	setRunCallback(callback: Function) {
-		this.runCallback = callback;
+		this.runCallback = callback;   // setRunCallback函数，把参数的函数传入this.runCallback方法，_run 方法启动时运行该方法。
 	}
 
 	/**
@@ -308,6 +396,17 @@ export class Script {
 	 * @param {Scheme} scheme
 	 * @returns
 	 */
+	        //IFunc[]中	
+	        // IFunc {
+		// 	id?: number;
+		// 	name?: string;
+		// 	desc?: string;
+		// 	config?: IFuncConfigOrigin[];
+		// 	operator?: IFuncOperator[];
+		// 	operatorFunc?(thisScript: Script, thisOperator: IFuncOperator[]): boolean;
+		// 	transed?: boolean;
+		// }
+	
 	getFuncList(scheme: IScheme): IFunc[] {
 		const retFunclist = [];
 		if (!this.funcMap) {
