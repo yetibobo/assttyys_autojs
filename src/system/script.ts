@@ -398,11 +398,28 @@ export class Script {
 	 */
 	        //getFuncList返回值：IFunc[]--功能函数--列表中元素格式为
 	        // IFunc {
-		// 	id?: number;
-		// 	name?: string;
-		// 	desc?: string;
-		// 	config?: IFuncConfigOrigin[];
-		// 	operator?: IFuncOperator[];
+		// 	id?: number;功能ID（可选）
+		// 	name?: string;功能名称（可选）
+		// 	desc?: string;功能描述（可选）
+		// 	config?: IFuncConfigOrigin[];功能配置数组（可选）
+				// IFuncConfigOrigin {
+				//     desc: string;功能描述
+				//     config: Array<{
+				//         name: string,
+				//         desc: string,
+				//         // TODO 修改为枚举类型
+				//         type: string, // 'switch' | 'integer' | 'text' | 'scheme' | 'list',
+				//         default: boolean | string | number
+				//     }>
+				// }
+	
+		// 	operator?: IFuncOperator[]; 自定义操作函数（可选）
+				// operator 是 IFuncOperator[] 类型，每个操作项包含：
+						// desc?: 多点比色描述，可以是坐标数组或字符串引用
+						// oper?: 普通点击坐标数组
+						// operStepRandom?: 随机步进点击坐标数组
+						// retest?: 重试时间
+						// notForCnt?: 是否不计入统计
 		// 	operatorFunc?(thisScript: Script, thisOperator: IFuncOperator[]): boolean;
 		// 	transed?: boolean;
 		// }
@@ -430,10 +447,16 @@ export class Script {
 		// }
 	
 	getFuncList(scheme: IScheme): IFunc[] {
+		// 创建一个空数组，用于存储最终返回的功能列表  
 		const retFunclist = [];
+		// 检查功能映射表是否已初始化 
 		if (!this.funcMap) {
+			 // 初始化功能映射表为空对象 
 			this.funcMap = {};
-			funcList.forEach(item => this.funcMap[item.id] = item);
+			// 遍历全局功能列表，将每个功能以ID为键存入映射表，便于快速查找  
+			// 在JavaScript/TypeScript中，Array.prototype.forEach() 是用于遍历数组的方法。
+			// 遍历 funcList 数组，将每个元素的 id 作为键，元素本身作为值，存入 this.funcMap 对象
+			funcList.forEach(item => this.funcMap[item.id] = item);//根据
 		}
 		for (let i = 0; i < scheme.list.length; i++) {
 			const thisFuncList = this.funcMap[scheme.list[i]];
