@@ -396,7 +396,7 @@ export class Script {
 	 * @param {Scheme} scheme
 	 * @returns
 	 */
-	        //IFunc[]中	
+	        //getFuncList返回值：IFunc[]--功能函数--列表中元素格式为
 	        // IFunc {
 		// 	id?: number;
 		// 	name?: string;
@@ -405,6 +405,28 @@ export class Script {
 		// 	operator?: IFuncOperator[];
 		// 	operatorFunc?(thisScript: Script, thisOperator: IFuncOperator[]): boolean;
 		// 	transed?: boolean;
+		// }
+		//getFuncList参数值 ：IScheme--脚本方案--对象格式为
+		// IScheme {
+		//     id: number;
+		//     schemeName: string;
+		//     groupNames?: string[];
+		//     inner?: boolean;
+		//     star?: boolean;
+		
+		//     /**
+		//      * 功能id的清单,比如个人探索方案的list是0，1，2，14，15，29
+		//      */
+		//     list: number[];
+		//     config?: {
+		//         [key: number]: {
+		//             [key: string]: string | boolean | number
+		//         }
+		//     };
+		//     commonConfig?: {
+		//         [key: string]: string | boolean | number
+		//     };
+		//     funcList?: IFunc[];
 		// }
 	
 	getFuncList(scheme: IScheme): IFunc[] {
