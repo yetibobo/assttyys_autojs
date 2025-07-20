@@ -460,38 +460,64 @@ export class Script {
 		}
 		 // 遍历方案中的功能ID列表  
 		for (let i = 0; i < scheme.list.length; i++) {  //数组的 ‌length 属性‌ 是一个‌只读数字型属性‌，表示数组当前包含的元素数量。
-			const thisFuncList = this.funcMap[scheme.list[i]];
+			// 根据功能ID从映射表中获取对应的功能配置  
+			const thisFuncList = this.funcMap[scheme.list[i]]; //this.funcMap是整合了所有的功能函数，然后按当前方案list筛选到thisFuncList
+			// 比如个人探索list: [0, 1, 2, 3, 13, 14, 29]，对应funlist文件夹下是
+			// 000_结束判断，001_准备，002_退出结算，003.悬赏协作，013_探索_地图进入章节，014_探索_点击挑战图标，029_庭院进入探索地图
+			// thisFuncList中就是这6个函数的的某1个
+			// 如果功能不存在，跳过当前循环  
 			if (!thisFuncList) continue;
-			const operator = thisFuncList.operator;
+			
+			// 获取功能的操作配置数组  
+			// 比如现在遍历到了“013_探索_地图进入章节”，它的
+			// thisFuncList.operator的值是一个包含desc: '',per: [点击坐标]，retest: 等属性内容的数组
+			const operator = thisFuncList.operator;  //
+			// 检查功能是否未转换过且存在操作配置 
 			if (!thisFuncList.transed && operator) {
+				// 遍历操作配置数组中的每个操作项 比如“013_探索_地图进入章节”，第0个operator是desc: '探索地图界面',per: [点击坐标]，retest: 1000的1个集合
 				for (let k = 0; k < operator.length; k++) {
-					if (operator[k].desc) {
+					// 处理多点比色描述配置  
+					if (operator[k].desc) {  //如果desc存在
+						 // 如果desc是字符串类型，多点比色
 						if (typeof operator[k].desc === 'string') {
 							try {
+								// 从src\common\multiDetectColors.ts中获取实际的坐标配置并替换字符串引用  
+								// 比如multiDetectColors.ts中的key='探索地图界面'时，value是一组6个点的取色数组
 								operator[k].desc = this.multiDetectColors[operator[k].desc as string].desc;
 							} catch (e) {
-								console.error(`${operator[k].desc}未在multiDetectColors定义`);
+								 // 如果引用的配置不存在，输出错误信息并抛出异常  
+								console.error(`${operator[k].desc}未在multiDetectColors定义`); //通过从multiDetectColors.ts
 								throw e;
 							}
 						} else {
+							// 如果desc是数组类型（直接的坐标配置）  
+                    					// 调用helper的GetCmpColorArray方法进行坐标转换（从开发分辨率转为运行分辨率）
 							// if (operator[k]?.desc?.length >= 3) {
 							operator[k].desc = helperBridge.helper.GetCmpColorArray(operator[k].desc[0], operator[k].desc[1], operator[k].desc[2]);
 							// }
 						}
 					}
+					 // 处理普通点击操作坐标  
 					if (operator[k].oper) {
+						// 调用regionClickTrans方法将开发分辨率坐标转换为运行分辨率坐标  
 						operator[k].oper = helperBridge.regionClickTrans(operator[k].oper);
 					}
+					// 处理随机步进点击操作坐标  
 					if (operator[k].operStepRandom) {
+						// 遍历随机步进点击数组中的每个坐标配置  
 						for (let m = 0; m < operator[k].operStepRandom.length; m++) {
+							// 同样进行坐标转换  
 							operator[k].operStepRandom[m] = helperBridge.regionClickTrans(operator[k].operStepRandom[m]);
 						}
 					}
 				}
+				// 标记该功能已完成坐标转换，避免重复处理  
 				thisFuncList.transed = true;
 			}
+			// 将处理后的功能配置添加到返回列表中  
 			retFunclist.push(thisFuncList);
 		}
+		// 返回处理后的功能列表 
 		return retFunclist;
 	}
 
@@ -816,6 +842,20 @@ export class Script {
 	 * 若没有则提示无法识别当前界面
 	 * @param {MyFloaty} myfloaty
 	 */
+			// 完整的监测流程
+			// 用户点击自动运行按钮 → autoRun 执行一次性界面识别
+			// 识别成功后 → 调用 run() → 启动 _run() 的无限循环
+			
+			// 这里调用的 self.run() 最终会执行 _run() 方法，启动持续的界面监测循环。
+			// 这个方法创建了一个无限循环的线程：
+			
+			// 无限循环监测：while (true) 循环确保持续运行
+			// 截屏更新：每次循环都调用 self.keepScreen(false) 获取最新屏幕状态
+			// 遍历功能列表：对当前方案的每个功能进行检测
+			// 界面识别：通过 self.oper() 方法执行具体的界面识别和操作
+			// 循环延时：sleep(+self.scheme.commonConfig.loopDelay) 控制检测频率
+			// 循环中持续截屏、识别界面、执行操作、等待延时
+
 	autoRun(myfloaty: MyFloaty) {
 		const self = this;
 		self.keepScreen(false);
@@ -935,73 +975,111 @@ export class Script {
 	 * @param {*} currFunc
 	 * @param {*} retest 重试时间
 	 */
+	//完整的界面判断流程：
+	// 1.配置加载：系统启动时从 multiDetectColors 加载所有界面的识别规则
+	// 2.坐标转换：根据当前设备分辨率自动转换坐标点
+	// 3.循环检测：在 _run 的无限循环中持续调用 oper 方法
+	// 4.多点比色：对每个功能项的 desc 规则进行颜色匹配
+	// 5.操作执行：识别成功后执行相应的点击或滑动操作
+	
 	oper(currFunc: IFunc, retest?: number) {
+		  // 获取当前功能的操作配置数组，包含界面识别和点击操作的配置  
 		const operator = currFunc.operator; // 需要计算的坐标通过operater传进去使用
+		    // 获取自定义操作函数（如果存在）  
 		const operatorFunc = currFunc.operatorFunc;
+
+		// 如果存在自定义操作函数，优先执行自定义函数  
 		if (typeof operatorFunc === 'function') {
+			// 调用自定义函数，传入脚本实例和操作配置  
 			if (operatorFunc.call(null, this, operator)) {
 				console.log('oper_success: [function] currFunc.name' + currFunc.name);
-				return true;
+				return true;   // 自定义函数执行成功，返回true  
 			}
 		} else {
+			 // 没有自定义函数时，遍历操作配置数组  
 			for (let id = 0; id < operator.length; id++) {
-				const item = operator[id];
-				let rs;
+				const item = operator[id];  // 当前操作项  
+				let rs;  // 界面识别结果  
+
+				// 检查是否有界面识别配置  
 				if (item.desc && item.desc.length) {
+
+					 // 如果desc是字符串，从预定义配置中获取比色规则 
 					if (typeof item.desc === 'string') {
+						// rs 是 helperBridge.helper.CompareColorEx() 方法的返回值，这是一个布尔值（boolean）
 						rs = helperBridge.helper.CompareColorEx(this.multiDetectColors[item.desc].desc, this.scheme.commonConfig.colorSimilar, false);
 					} else {
+						  // 没有界面识别配置时，直接返回true（无条件执行） 
 						rs = helperBridge.helper.CompareColorEx(item.desc, this.scheme.commonConfig.colorSimilar, false);
 					}
 				} else {
+					  // 没有界面识别配置时，直接返回true（无条件执行） 
 					rs = true;
 				}
+				 // 如果界面识别成功  
 				if (rs) {
+					// 调试功能：在屏幕上绘制识别点位（绿色方框） 
 					if (drawFloaty.instacne && item.desc) {
 						let thisDesc: any = item.desc;
+						  // 如果是字符串引用，获取实际的比色配置  
 						if (typeof item.desc === 'string') {
 							thisDesc = this.multiDetectColors[item.desc as string].desc;
 						}
-						const toDraw = [...thisDesc.map(kk => {
+						// 创建绘制数据，在每个识别点周围画5像素的绿色方框  
+					        //... 将这个数组的所有元素展开
+						// [...] 创建一个新数组，包含展开的所有元素
+						// 实际效果
+						// 假设 thisDesc 包含多个坐标点，展开运算符确保：
+						// 不是创建嵌套数组 [[obj1, obj2, obj3]]
+						// 而是创建平铺数组 [obj1, obj2, obj3]
+						const toDraw = [...thisDesc.map(kk => {  //展开运算符，... ，用于将 thisDesc.map() 返回的数组展开到 toDraw 数组中：				
 							return {
 								color: 'green',
 								region: [kk[0] - 5, kk[1] - 5, kk[0] + 5, kk[1] + 5]
 							}
 						})];
-
+						// 绘制200毫秒  
 						drawFloaty.draw(toDraw, 200);
 					}
+					 // 处理重试逻辑  
 					retest = retest || item.retest || undefined;
 					if (retest && retest !== -1) {
-						sleep(retest);
-						this.keepScreen(false);
-						return this.oper(currFunc, -1);
+						sleep(retest);// 等待指定时间  
+						this.keepScreen(false);// 重新截屏  
+						return this.oper(currFunc, -1);// 递归调用，-1表示已经重试过 
 					}
+
+					 // 统计功能执行次数（防重复计数逻辑）  
 					if (!!currFunc.id /* && this.lastFunc !== (currFunc.id + '_' + id) */ && !item.notForCnt) {
 						// 增加判断，7.5秒内执行的功能一样的话不计次
 						if ((this.lastFunc === currFunc.id && new Date().getTime() - (this.lastFuncDateTime || new Date()).getTime() > 7500) || this.lastFunc !== currFunc.id) {
+							// 初始化计数器  
 							if (!this.runTimes[currFunc.id]) {
 								this.runTimes[currFunc.id] = 0;
 							}
-							this.runTimes[currFunc.id]++;
-							this.lastFunc = currFunc.id;
+							this.runTimes[currFunc.id]++; // 增加执行次数  
+							this.lastFunc = currFunc.id; // 记录最后执行的功能ID  
 						}
-						this.lastFuncDateTime = new Date();
+						this.lastFuncDateTime = new Date(); // 更新最后执行时间
 					}
 
+					// 执行具体操作  
 					if (item.operStepRandom) {
+						 // 执行随机步骤点击（多步骤随机点击） 
 						if (currFunc.id)
 							console.log(`oper_success：[item.operStepRandom] currFunc.name:${currFunc.name} currFunc.id:${currFunc.id} lastFunc:${this.lastFunc} id:${id} oper:${item.oper}`);
 						helperBridge.regionStepRandomClick(item.operStepRandom, Math.floor(this.scheme.commonConfig.afterClickDelayBase as number), Math.floor(this.scheme.commonConfig.afterClickDelayRandom as number));
 					} else if (item.oper) {
+						// 执行普通点击操作  
 						if (currFunc.id)
 							console.log(`oper_success：[item.oper] currFunc.name:${currFunc.name} currFunc.id:${currFunc.id} lastFunc:${this.lastFunc} id:${id} oper:${item.oper}`);
 						helperBridge.regionClick(item.oper, Math.floor(this.scheme.commonConfig.afterClickDelayBase as number || 0), Math.floor(this.scheme.commonConfig.afterClickDelayRandom as number));
 					} else {
+						// 只识别不操作的情况  
 						if (currFunc.id)
 							console.log(`oper_success: [] currFunc.name:${currFunc.name} currFunc.id:${currFunc.id} lastFunc:${this.lastFunc} id:${id} oper:${item.oper}`);
 					}
-					return true;
+					return true;// 操作成功，返回true 
 				}
 			}
 		}
