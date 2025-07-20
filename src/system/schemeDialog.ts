@@ -1,3 +1,6 @@
+/*
+ * 实现了一个方案选择UI对话框功能，用于在悬浮控件中显示可用的自动化方案供用户选择
+*/
 import store, { storeCommon } from '@/system/Store/store';
 import script from '@/system/script';
 import { MyFloaty } from './MyFloaty';
