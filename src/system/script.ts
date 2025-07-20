@@ -456,9 +456,10 @@ export class Script {
 			// 遍历全局功能列表，将每个功能以ID为键存入映射表，便于快速查找  
 			// 在JavaScript/TypeScript中，Array.prototype.forEach() 是用于遍历数组的方法。
 			// 遍历 funcList 数组，将每个元素的 id 作为键，元素本身作为值，存入 this.funcMap 对象
-			funcList.forEach(item => this.funcMap[item.id] = item);//根据
+			funcList.forEach(item => this.funcMap[item.id] = item);
 		}
-		for (let i = 0; i < scheme.list.length; i++) {
+		 // 遍历方案中的功能ID列表  
+		for (let i = 0; i < scheme.list.length; i++) {  //数组的 ‌length 属性‌ 是一个‌只读数字型属性‌，表示数组当前包含的元素数量。
 			const thisFuncList = this.funcMap[scheme.list[i]];
 			if (!thisFuncList) continue;
 			const operator = thisFuncList.operator;
