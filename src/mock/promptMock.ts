@@ -1,3 +1,12 @@
+// 主要在前端Vue组件中被调用，通过 AutoWeb.autoPromise() 方法间接使用 。
+// Vue项目通过 AutoWeb.autoPromise('getSchemeList') 和 AutoWeb.autoPromise('getGroupNames') 获取模拟数据，
+// 这些调用最终会路由到 promptMock.ts 中对应的模拟函数。
+
+// Vue组件调用 AutoWeb.autoPromise('getScheduleList') 等方法
+// 该方法最终会调用到 window.promptMock 函数
+// promptMock 函数根据API名称返回对应的模拟数据：
+
+
 import { versionList } from '../common/version';
 
 const promptMockData = {
