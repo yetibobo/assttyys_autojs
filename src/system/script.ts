@@ -807,9 +807,21 @@ export class Script {
 		this.runThread = threads.start(function () {
 			try {
 				// eslint-disable-next-line no-constant-condition
+				// 无限循环监测：while (true) 循环确保持续运行
+				// 截屏更新：每次循环都调用 self.keepScreen(false) 获取最新屏幕状态
+				// 遍历功能列表：对当前方案的每个功能进行检测
+				// 界面识别：通过 self.oper() 方法执行具体的界面识别和操作
+						//oper 方法会检查其 operator 数组中的每个元素：
+						// 关键的界面识别逻辑在这里：
+						// 如果 item.desc 是字符串，则从预定义的 multiDetectColors 配置中获取比色规则
+						// 如果 item.desc 是数组，则直接使用该数组作为比色规则
+						// 比如013_探索_地图进入章节的第一个operator的desc是'探索地图界面'会从src\common\multiDetectColors.ts中到这个比色规则
+						// oper 方法返回真，则执行
+				// 循环延时：sleep(+self.scheme.commonConfig.loopDelay) 控制检测频率
 				while (true) {
 					self.keepScreen(false);
 					for (let i = 0; i < self.scheme.funcList.length; i++) {
+						// 直到无法匹配任何功能界面，否则一直循环进行界面判断并执行点击。
 						if (self.oper(self.scheme.funcList[i], undefined)) {
 							self.currentDate = new Date();
 							break;
@@ -996,7 +1008,7 @@ export class Script {
 				return true;   // 自定义函数执行成功，返回true  
 			}
 		} else {
-			 // 没有自定义函数时，遍历操作配置数组  
+			 // 没有自定义函数时，遍历操作配置数组  比如013_探索_地图进入章节.ts 有1个operator，有4个对象，前2个有desc后2个没有。遍历数是4
 			for (let id = 0; id < operator.length; id++) {
 				const item = operator[id];  // 当前操作项  
 				let rs;  // 界面识别结果  
@@ -1004,12 +1016,12 @@ export class Script {
 				// 检查是否有界面识别配置  
 				if (item.desc && item.desc.length) {
 
-					 // 如果desc是字符串，从预定义配置中获取比色规则 
+					 // 如果desc是字符串，从预定义配置中获取比色规则 ，进行比色返回结果
 					if (typeof item.desc === 'string') {
 						// rs 是 helperBridge.helper.CompareColorEx() 方法的返回值，这是一个布尔值（boolean）
 						rs = helperBridge.helper.CompareColorEx(this.multiDetectColors[item.desc].desc, this.scheme.commonConfig.colorSimilar, false);
 					} else {
-						  // 没有界面识别配置时，直接返回true（无条件执行） 
+						// 如果不是字符串时，直接执行比色 
 						rs = helperBridge.helper.CompareColorEx(item.desc, this.scheme.commonConfig.colorSimilar, false);
 					}
 				} else {
