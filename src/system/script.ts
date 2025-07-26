@@ -996,7 +996,7 @@ export class Script {
 	// 3.循环检测：在 _run 的无限循环中持续调用 oper 方法
 	// 4.多点比色：对每个功能项的 desc 规则进行颜色匹配
 	// 5.操作执行：识别成功后执行相应的点击或滑动操作
-
+        // -------------------oper---------(比色=>界面判断成功=>执行，否则=)
 	//  这里的IFunc类型就是配置格式的对象
 	oper(currFunc: IFunc, retest?: number) {
 		  // 获取当前功能的操作配置数组，包含界面识别和点击操作的配置  
@@ -1024,7 +1024,7 @@ export class Script {
 				const item = operator[id];  // 当前操作项  
 				let rs;  // 界面识别结果  
 
-				// 1.如果 operator[0]的desc属性值存在且不为空
+				// 1.如果 operator[0]的desc属性值存在且不为空，则进行界面判断
 				// 检查是否有界面识别配置  
 				if (item.desc && item.desc.length) {
 
@@ -1036,14 +1036,13 @@ export class Script {
 						// 如果不是字符串时，直接执行比色 
 						rs = helperBridge.helper.CompareColorEx(item.desc, this.scheme.commonConfig.colorSimilar, false);
 					}
-				// 2.	
+				 // 2.	如果没有界面判断要求，说明界面判断已完成,rs置为true
 				} else {
-					  // 没有界面识别配置时，直接返回true（无条件执行） 
 					rs = true;
 				}
-				 // 如果界面识别成功  
+				 // 3. 如果界面识别成功  
 				if (rs) {
-					// 调试功能：在屏幕上绘制识别点位（绿色方框） 
+					// 如果调试功能开启：在屏幕上绘制识别点位（绿色方框） 
 					if (drawFloaty.instacne && item.desc) {
 						let thisDesc: any = item.desc;
 						  // 如果是字符串引用，获取实际的比色配置  
@@ -1066,7 +1065,7 @@ export class Script {
 						// 绘制200毫秒  
 						drawFloaty.draw(toDraw, 200);
 					}
-					 // 处理重试逻辑  
+					 // 处理重试逻辑 retest参数调用时第一次为_run默认undefined,即不会重截屏
 					retest = retest || item.retest || undefined;
 					if (retest && retest !== -1) {
 						sleep(retest);// 等待指定时间  
@@ -1074,11 +1073,18 @@ export class Script {
 						return this.oper(currFunc, -1);// 递归调用，-1表示已经重试过 
 					}
 
-					 // 统计功能执行次数（防重复计数逻辑）  
+					// 统计功能执行次数（防重复计数逻辑）
+					// 确保当前func有有效的ID,且确保当前操作项没有被标记为"不计数"
 					if (!!currFunc.id /* && this.lastFunc !== (currFunc.id + '_' + id) */ && !item.notForCnt) {
 						// 增加判断，7.5秒内执行的功能一样的话不计次
+						// 如果this.lastFunc === currFunc.id 且 时间差 > 7500
+						// 第一次执行功能时，this.lastFuncDateTime 是 null，如果直接调用 null.getTime() 会报错。通过 || new Date() 的处理，确保：
+						// 第一次执行时，使用当前时间作为基准时间
+						// 后续执行时，使用实际的上次执行时间
 						if ((this.lastFunc === currFunc.id && new Date().getTime() - (this.lastFuncDateTime || new Date()).getTime() > 7500) || this.lastFunc !== currFunc.id) {
 							// 初始化计数器  
+							// 检查该功能ID的计数器是否存在
+							// 如果不存在，初始化为0 
 							if (!this.runTimes[currFunc.id]) {
 								this.runTimes[currFunc.id] = 0;
 							}
