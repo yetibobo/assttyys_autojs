@@ -1010,17 +1010,21 @@ export class Script {
 			// 执行funclist中的自定义函数operatorFunc，参数为operator
 			// 本身operatorFunc在funclist中参数定义类型就是
 			// 定义operatorFunc(thisScript: Script, thisOperator: IFuncOperator[]): boolean {
-			// IFuncOperator参数类型就是各种配置的数组	
+			// IFuncOperator参数类型就是各种配置的数组
+			// 一般operatorFunc会调用oper，这样使得oper()就变成了递归函数
 			if (operatorFunc.call(null, this, operator)) {  
 				console.log('oper_success: [function] currFunc.name' + currFunc.name);
 				return true;   // 自定义函数执行成功，返回true  
 			}
+		// ---------这里开始是核心配置转动作的代码----------------------
+		// 没有自定义函数时，遍历操作配置数组  比如013_探索_地图进入章节.ts 有1个operator，有4个对象，前2个有desc后2个没有。遍历数是4
 		} else {
-			 // 没有自定义函数时，遍历操作配置数组  比如013_探索_地图进入章节.ts 有1个operator，有4个对象，前2个有desc后2个没有。遍历数是4
+			// 遍历operator，一般一个func只有一个operator
 			for (let id = 0; id < operator.length; id++) {
 				const item = operator[id];  // 当前操作项  
 				let rs;  // 界面识别结果  
 
+				// 1.如果 operator[0]的desc属性值存在且不为空
 				// 检查是否有界面识别配置  
 				if (item.desc && item.desc.length) {
 
@@ -1032,6 +1036,7 @@ export class Script {
 						// 如果不是字符串时，直接执行比色 
 						rs = helperBridge.helper.CompareColorEx(item.desc, this.scheme.commonConfig.colorSimilar, false);
 					}
+				// 2.	
 				} else {
 					  // 没有界面识别配置时，直接返回true（无条件执行） 
 					rs = true;
