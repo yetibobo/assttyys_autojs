@@ -763,7 +763,7 @@ export class Script {
 	}
 
 	/**
-	 * 运行脚本，内部接口
+	 * 运行脚本，内部接口-------------执行入口----------------------
 	 * @returns
 	 */
 	_run(job?: Job): void {
@@ -822,7 +822,10 @@ export class Script {
 					self.keepScreen(false);
 					for (let i = 0; i < self.scheme.funcList.length; i++) {
 						// 直到无法匹配任何功能界面，否则一直循环进行界面判断并执行点击。
-						if (self.oper(self.scheme.funcList[i], undefined)) {
+						// 通过if语句执行oper,函数为self.scheme.funcList[i]
+						// 而funcList = this.getFuncList(this.scheme)
+						// 比如个人探索list: [0, 1, 2, 3, 13, 14, 29]，比如说循环到了funcList[13]
+						if (self.oper(self.scheme.funcList[i], undefined)) { 
 							self.currentDate = new Date();
 							break;
 						}
@@ -993,7 +996,8 @@ export class Script {
 	// 3.循环检测：在 _run 的无限循环中持续调用 oper 方法
 	// 4.多点比色：对每个功能项的 desc 规则进行颜色匹配
 	// 5.操作执行：识别成功后执行相应的点击或滑动操作
-	
+
+	//  这里的IFunc类型就是配置格式的对象
 	oper(currFunc: IFunc, retest?: number) {
 		  // 获取当前功能的操作配置数组，包含界面识别和点击操作的配置  
 		const operator = currFunc.operator; // 需要计算的坐标通过operater传进去使用
@@ -1002,8 +1006,12 @@ export class Script {
 
 		// 如果存在自定义操作函数，优先执行自定义函数  
 		if (typeof operatorFunc === 'function') {
-			// 调用自定义函数，传入脚本实例和操作配置  
-			if (operatorFunc.call(null, this, operator)) {
+			// 调用自定义函数，传入脚本实例和操作配置 
+			// 执行funclist中的自定义函数operatorFunc，参数为operator
+			// 本身operatorFunc在funclist中参数定义类型就是
+			// 定义operatorFunc(thisScript: Script, thisOperator: IFuncOperator[]): boolean {
+			// IFuncOperator参数类型就是各种配置的数组	
+			if (operatorFunc.call(null, this, operator)) {  
 				console.log('oper_success: [function] currFunc.name' + currFunc.name);
 				return true;   // 自定义函数执行成功，返回true  
 			}
